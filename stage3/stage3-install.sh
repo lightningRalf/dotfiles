@@ -119,7 +119,8 @@ install_file_tools() {
     # bat - Better cat
     case "$PKG_MANAGER" in
         apt|brew|pkg)
-            pkg_install batcat
+            pkg_install bat || pkg_install batcat
+            # Debian/Ubuntu use batcat
             ;;
         *)
             install_from_cargo "bat"
