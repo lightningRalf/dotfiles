@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
-# Platform detection utilities
+# Platform detection utilities - Supporting both dynamic and cached patterns
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Dynamic Detection Functions
+# ═══════════════════════════════════════════════════════════════════════════════
 
 detect_os() {
     if [[ -d "/data/data/com.termux" ]]; then
@@ -39,5 +43,66 @@ detect_pkg_manager() {
     fi
 }
 
-# Export functions for use in other scripts
+# ═══════════════════════════════════════════════════════════════════════════════
+# Cached Platform Loading Function
+# ═══════════════════════════════════════════════════════════════════════════════
+
+load_platform_info() {
+    local platform_file="${DOTFILES_DIR:-$HOME/dotfiles}/.platform"
+    
+    if [[ -f "$platform_file" ]]; then
+        # Source the cached platform information
+        source "$platform_file"
+        return 0
+    else
+        # Fallback: Perform detection dynamically
+        echo "Warning: No cached platform info found, detecting dynamically..." >&2
+        
+        # Export detected values
+        export PLATFORM=$(detect_os)
+        export DISTRO=$(detect_distro)
+        export PKG_MANAGER=$(detect_pkg_manager)
+        export ARCH=$(uname -m)
+        
+        return 0
+    fi
+}
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Utility Functions
+# ═══════════════════════════════════════════════════════════════════════════════
+
+# Save current platform detection to cache file
+save_platform_info() {
+    local platform_file="${DOTFILES_DIR:-$HOME/dotfiles}/.platform"
+    
+    cat > "$platform_file" << EOF
+PLATFORM=$(detect_os)
+DISTRO=$(detect_distro)
+PKG_MANAGER=$(detect_pkg_manager)
+ARCH=$(uname -m)
+KERNEL=$(uname -r)
+DETECTED=$(date -u +"%Y-%m-%d %H:%M:%S UTC")
+EOF
+}
+
+# Verify platform information is available
+verify_platform() {
+    local required_vars=(PLATFORM PKG_MANAGER)
+    
+    for var in "${required_vars[@]}"; do
+        if [[ -z "${!var}" ]]; then
+            echo "Error: Required variable $var not set" >&2
+            return 1
+        fi
+    done
+    
+    return 0
+}
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Export Functions
+# ═══════════════════════════════════════════════════════════════════════════════
+
 export -f detect_os detect_distro detect_pkg_manager
+export -f load_platform_info save_platform_info verify_platform
