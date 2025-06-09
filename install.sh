@@ -11,6 +11,27 @@
 
 set -euo pipefail
 
+pre_flight_check() {
+    local required_dirs=("logs" "scripts" "config")
+    
+    echo "Performing pre-flight check..."
+    
+    for dir in "${required_dirs[@]}"; do
+        if [[ ! -d "$DOTFILES_DIR/$dir" ]]; then
+            echo "Creating missing directory: $dir"
+            mkdir -p "$DOTFILES_DIR/$dir"
+        fi
+    done
+    
+    # Verify write permissions
+    if [[ ! -w "$DOTFILES_DIR" ]]; then
+        echo "Error: Cannot write to $DOTFILES_DIR"
+        exit 1
+    fi
+    
+    echo "Pre-flight check completed successfully"
+}
+
 # ===== Configuration Variables =====
 DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
 CONFIG_DIR="$HOME/.config"

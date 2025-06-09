@@ -27,9 +27,28 @@ log_and_run
 # 2. Starship cross-shell prompt with contextual information
 # 3. Enhanced navigation with zoxide
 
+pre_flight_check() {
+    local required_dirs=("logs" "scripts" "config")
+    
+    echo "Performing pre-flight check..."
+    
+    for dir in "${required_dirs[@]}"; do
+        if [[ ! -d "$DOTFILES_DIR/$dir" ]]; then
+            echo "Creating missing directory: $dir"
+            mkdir -p "$DOTFILES_DIR/$dir"
+        fi
+    done
+    
+    # Verify write permissions
+    if [[ ! -w "$DOTFILES_DIR" ]]; then
+        echo "Error: Cannot write to $DOTFILES_DIR"
+        exit 1
+    fi
+    
+    echo "Pre-flight check completed successfully"
+}
 
-
-set -euo pipefail
+set -euo pipefail # Exit on error, unset variable, or pipe failure
 
 # ===== Configuration Variables =====
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
