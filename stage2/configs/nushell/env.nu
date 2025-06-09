@@ -1,5 +1,5 @@
-# Nushell Environment Configuration - Final Correction
-# This version correctly scopes variables for parse-time analysis.
+# Nushell Environment Configuration - Corrected
+# Addresses initialization sequencing and file existence requirements
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # PATH Configuration
@@ -19,40 +19,38 @@ $env.PAGER = "less -R"
 # Starship Initialization with Proper Sequencing
 # ═══════════════════════════════════════════════════════════════════════════════
 
-# Define the path variable at the top level so the parser can see it.
-let starship_cache = $"($env.HOME)/.cache/starship"
-let starship_init = $"($starship_cache)/init.nu"
-
-# Only initialize if starship is available at runtime.
+# Only initialize if starship is available
 if (which starship | is-not-empty) {
-    # Ensure cache directory exists before generating the file.
+    # Ensure cache directory exists FIRST
+    let starship_cache = $"($env.HOME)/.cache/starship"
     mkdir $starship_cache
-
-    # Generate initialization file if it doesn't exist.
-    if not ($starship_init | path exists) {
-        ^starship init nu | save -f $starship_init
+    
+    let init_file = $"($starship_cache)/init.nu"
+    
+    # Check if initialization file exists or needs regeneration
+    if not ($init_file | path exists) {
+        # Generate initialization file
+        ^starship init nu | save -f $init_file
     }
     
-    # Source the file. The parser accepts this because $starship_init is a known variable.
-    source-env ($starship_init)
+    source ~/.cache/starship/init.nu
 }
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # Zoxide Initialization
 # ═══════════════════════════════════════════════════════════════════════════════
 
-# Define the path variable at the top level.
-let zoxide_init = $"($env.HOME)/.cache/zoxide.nu"
-
-# Only initialize if zoxide is available at runtime.
 if (which zoxide | is-not-empty) {
-    # Generate if missing.
+    let zoxide_cache = $"($env.HOME)/.cache"
+    let zoxide_init = $"($zoxide_cache)/zoxide.nu"
+    
+    # Generate if missing
     if not ($zoxide_init | path exists) {
         ^zoxide init nushell | save -f $zoxide_init
     }
     
-    # Source the file.
-    source-env ($zoxide_init)
+    # Use `source-env` with parenthesized expression for runtime path
+    source ~/.cache/zoxide.nu
 }
 
 # ═══════════════════════════════════════════════════════════════════════════════
