@@ -33,8 +33,8 @@ if (which starship | is-not-empty) {
         ^starship init nu | save -f $init_file
     }
     
-    # Use `eval` to source the file at runtime
-    eval $"source '($init_file)'"
+    # Use `source-env` with parenthesized expression for runtime path
+    source-env ($init_file)
 }
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -50,8 +50,8 @@ if (which zoxide | is-not-empty) {
         ^zoxide init nushell | save -f $zoxide_init
     }
     
-    # Use `eval` to source the file at runtime
-    eval $"source '($zoxide_init)'"
+    # Use `source-env` with parenthesized expression for runtime path
+    source-env ($zoxide_init)
 }
 
 # ═══════════════════════════════════════════════════════════════════════════════

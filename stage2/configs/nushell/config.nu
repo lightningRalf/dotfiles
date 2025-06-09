@@ -46,23 +46,23 @@ $env.config.keybindings = [
 # Script Loading
 # ═══════════════════════════════════════════════════════════════════════════════
 
-# Note: The `eval` command is used here as an escape hatch to source scripts
-# whose paths are determined at runtime, bypassing parse-time checks.
+# Note: To source files with dynamic paths, wrap the variable in parentheses.
+# This tells Nushell to evaluate the path at runtime.
 
 let scripts_dir = $"($env.HOME)/.config/nushell/scripts"
 
-# Check and source specific known scripts using `eval` for runtime execution
+# Check and source specific known scripts using the correct runtime syntax
 let aliases_file = $"($scripts_dir)/aliases.nu"
 if ($aliases_file | path exists) {
-    eval $"source '($aliases_file)'"
+    source ($aliases_file)
 }
 
-let functions_file = $"($scripts_dir)/functions.nu"
+let functions__file = $"($scripts_dir)/functions.nu"
 if ($functions_file | path exists) {
-    eval $"source '($functions_file)'"
+    source ($functions_file)
 }
 
 let completions_file = $"($scripts_dir)/completions.nu"
 if ($completions_file | path exists) {
-    eval $"source '($completions_file)'"
+    source ($completions_file)
 }
