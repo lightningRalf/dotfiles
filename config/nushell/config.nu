@@ -55,11 +55,16 @@ if ($ZOXIDE_SCRIPT | path expand | path exists) {
     source ~/.config/nushell/scripts/zoxide.nu
 }
 
-# Atuin history (if available)
-const ATUIN_SCRIPT = "~/.config/nushell/scripts/atuin.nu"
-if ($ATUIN_SCRIPT | path expand | path exists) {
-    source ~/.config/nushell/scripts/atuin.nu
+# Atuin shell history - ONLY source if file exists
+let atuin_script = ($SCRIPTS_DIR | path join "atuin.nu" | path expand)
+if ($atuin_script | path exists) {
+    print "Loading Atuin integration..."
+    source ($atuin_script | str replace '~' $env.HOME)
+} else if (which atuin | is-not-empty) {
+    print "Atuin is installed but integration script is missing."
+    print "To enable Atuin, run: atuin init nu > ~/.config/nushell/scripts/atuin.nu"
 }
+
 
 # ===== Utility Functions =====
 
