@@ -1,5 +1,24 @@
 #!/usr/bin/env bash
-#
+# Enhanced preamble for stage2-install.sh
+
+# Ensure directory structure exists
+DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
+mkdir -p "$DOTFILES_DIR"/{logs,backups,tmp}
+
+# Set up logging with automatic directory creation
+LOG_DIR="$DOTFILES_DIR/logs"
+LOG_FILE="$LOG_DIR/stage2-$(date +%Y%m%d-%H%M%S).log"
+
+# Create logging function
+log_and_run() {
+    echo "Starting Stage 2 installation at $(date)" | tee "$LOG_FILE"
+    exec > >(tee -a "$LOG_FILE")
+    exec 2>&1
+}
+
+# Call at script start
+log_and_run
+
 # Stage 2: Shell Evolution Installer
 # Transform your command line experience with modern shells and tools
 #
@@ -7,7 +26,8 @@
 # 1. Nushell as primary shell with intelligent configuration
 # 2. Starship cross-shell prompt with contextual information
 # 3. Enhanced navigation with zoxide
-# 4. Seamless integration with existing shells
+
+
 
 set -euo pipefail
 
