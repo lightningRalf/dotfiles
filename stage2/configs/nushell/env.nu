@@ -49,3 +49,39 @@ zoxide init nushell | save -f ~/.zoxide.nu
 if (which atuin | is-not-empty) {
     $env.ATUIN_NOBIND = "true"
 }
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# SSH Agent Initialization
+# ═══════════════════════════════════════════════════════════════════════════════
+
+source ~/.config/nushell/ssh-agent.nu
+
+# Connect to SSH agent on startup
+let agent_result = (connect_ssh_agent)
+
+match $agent_result.status {
+    "existing" => { 
+        print $"✓ Using existing SSH agent at ($agent_result.socket)"
+    }
+    "connected" => { 
+        print $"✓ Connected to SSH agent at ($agent_result.socket)"
+    }
+    "none" => {
+        print "⚠️  No SSH agent found"
+        print "Starting new agent..."
+        
+        # Start new agent
+        let agent_output = (ssh-agent -s | lines | parse "export {var}={value}")
+        for line in $agent_output {
+            if $line.var == "SSH_AUTH_SOCK" {
+                $env.SSH_AUTH_SOCK = $line.value
+            } else if $line.var == "SSH_AGENT_PID" {
+                $env.SSH_AGENT_PID = $line.value
+            }
+        }
+        print $"✓ New agent started"
+    }
+}
+
+# Optionally auto-load keys
+load_ssh_keys
