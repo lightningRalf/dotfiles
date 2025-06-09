@@ -1,0 +1,30 @@
+# Local configurations
+local/
+*.local
+
+# Backup files
+backups/
+*.bak
+*.backup
+
+# Temporary files
+*.tmp
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.idea/
+.vscode/
+*.sublime-*
+
+# Logs
+*.log
+logs/
+
+# Stage markers
+.dotfiles-stage*
