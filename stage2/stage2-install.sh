@@ -208,6 +208,35 @@ install_configs() {
     log_success "Atuin configuration installed"
 }
 
+# ===== Pre-generate Nushell Caches =====
+pre_generate_nu_caches() {
+    log_stage "Pre-generating Nushell Caches for a Smooth First Start"
+    
+    # Ensure commands are available in PATH
+    export PATH="$HOME/.cargo/bin:$PATH"
+
+    # Starship
+    if command -v starship &>/dev/null; then
+        log_info "Generating starship init script..."
+        mkdir -p "$HOME/.cache/starship"
+        starship init nu > "$HOME/.cache/starship/init.nu"
+        log_success "Starship cache generated."
+    else
+        log_warning "starship command not found, skipping cache generation."
+    fi
+
+    # Zoxide
+    if command -v zoxide &>/dev/null; then
+        log_info "Generating zoxide init script..."
+        mkdir -p "$HOME/.cache"
+        zoxide init nushell > "$HOME/.cache/zoxide.nu"
+        log_success "Zoxide cache generated."
+    else
+        log_warning "zoxide command not found, skipping cache generation."
+    fi
+}
+
+
 # ===== Verify Installation =====
 verify_installation() {
     log_stage "Verifying Installation"
@@ -248,6 +277,7 @@ main() {
     install_rust
     install_tools
     install_configs
+    pre_generate_nu_caches
     verify_installation
     
     # Mark complete

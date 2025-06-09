@@ -1,5 +1,5 @@
-# Nushell Configuration - Minimal Parse-Time Compliant
-# All paths are literals, no dynamic loading attempts
+# Nushell Configuration - Corrected for Parse-Time Constraints
+# Philosophy: Minimal configuration with proper constraint handling
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # Core Configuration
@@ -29,7 +29,7 @@ $env.config = {
 }
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# Keybindings - Minimal Set
+# Keybindings
 # ═══════════════════════════════════════════════════════════════════════════════
 
 $env.config.keybindings = [
@@ -43,18 +43,31 @@ $env.config.keybindings = [
 ]
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# Optional Script Loading
+# Script Loading
 # ═══════════════════════════════════════════════════════════════════════════════
 
-# Create scripts directory if needed
-mkdir ~/.config/nushell/scripts
+# Note: Due to Nushell's parse-time constraints, dynamic script loading
+# requires explicit source statements rather than iteration.
+# 
+# To load custom scripts, add explicit source commands here:
+# source ~/.config/nushell/scripts/custom.nu
+#
+# Or use the following pattern for a known set of scripts:
 
-# Note: To load custom scripts, create them first, then uncomment these lines:
-# source ~/.config/nushell/scripts/aliases.nu
-# source ~/.config/nushell/scripts/functions.nu
-# source ~/.config/nushell/scripts/completions.nu
+let scripts_dir = $"($env.HOME)/.config/nushell/scripts"
 
-# For now, we'll include minimal aliases directly here:
-alias ll = ls -la
-alias la = ls -a
-alias l = ls -l
+# Check and source specific known scripts using source-env for runtime evaluation
+let aliases_file = $"($scripts_dir)/aliases.nu"
+if ($aliases_file | path exists) {
+    source-env $aliases_file
+}
+
+let functions_file = $"($scripts_dir)/functions.nu"
+if ($functions_file | path exists) {
+    source-env $functions_file
+}
+
+let completions_file = $"($scripts_dir)/completions.nu"
+if ($completions_file | path exists) {
+    source-env $completions_file
+}
