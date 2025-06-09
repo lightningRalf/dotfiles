@@ -1,12 +1,18 @@
 #!/usr/bin/env bash
-# Platform Detection Service Layer
-# Provides comprehensive platform detection and caching functionality
+# Platform Detection Service Layer - Idempotent Implementation
+# Handles multiple source operations without variable conflicts
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# Service Configuration
+# Service Configuration - Idempotent Declarations
 # ═══════════════════════════════════════════════════════════════════════════════
 
-readonly PLATFORM_CACHE="${DOTFILES_DIR:-$HOME/dotfiles}/.platform"
+# Only declare if not already set (idempotent pattern)
+if [[ -z "${PLATFORM_CACHE:-}" ]]; then
+    PLATFORM_CACHE="${DOTFILES_DIR:-$HOME/dotfiles}/.platform"
+fi
+
+# Alternative: Use declare without readonly for re-sourceable scripts
+declare PLATFORM_CACHE="${PLATFORM_CACHE:-${DOTFILES_DIR:-$HOME/dotfiles}/.platform}"
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # Core Detection Functions
@@ -41,7 +47,6 @@ detect_distro() {
             echo "macos"
             ;;
         container|wsl*)
-            # Even in containers/WSL, try to detect the base distro
             if [[ -f /etc/os-release ]]; then
                 grep "^ID=" /etc/os-release | cut -d= -f2 | tr -d '"'
             else
@@ -59,7 +64,6 @@ detect_distro() {
 }
 
 detect_pkg_manager() {
-    # Check in order of likelihood/preference
     if command -v pkg &>/dev/null && [[ -d "/data/data/com.termux" ]]; then
         echo "pkg"
     elif command -v apt-get &>/dev/null; then
@@ -82,7 +86,7 @@ detect_pkg_manager() {
 }
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# Cache Management Functions
+# Cache Management Functions - With Proper Quoting
 # ═══════════════════════════════════════════════════════════════════════════════
 
 save_platform_info() {
@@ -91,7 +95,7 @@ save_platform_info() {
     # Ensure directory exists
     mkdir -p "$(dirname "$cache_file")"
     
-    # Perform detection and save with proper quoting
+    # Generate with proper quoting for all values
     cat > "$cache_file" << EOF
 # Platform detection cache - generated $(date -u +"%Y-%m-%d %H:%M:%S UTC")
 PLATFORM="$(detect_os)"
@@ -102,6 +106,12 @@ KERNEL="$(uname -r)"
 DETECTED="$(date -u +"%Y-%m-%d %H:%M:%S UTC")"
 EOF
     
+    # Validate generated file syntax
+    if ! bash -n "$cache_file" 2>/dev/null; then
+        echo "Error: Generated platform file has syntax errors" >&2
+        return 1
+    fi
+    
     return 0
 }
 
@@ -109,60 +119,46 @@ load_platform_info() {
     local cache_file="${1:-$PLATFORM_CACHE}"
     
     if [[ -f "$cache_file" ]]; then
-        # Load cached values
-        source "$cache_file"
+        # Source with error handling
+        if ! source "$cache_file" 2>/dev/null; then
+            echo "Warning: Cache file corrupted, using dynamic detection" >&2
+            # Fallback to dynamic detection
+            export PLATFORM="$(detect_os)"
+            export DISTRO="$(detect_distro)"
+            export PKG_MANAGER="$(detect_pkg_manager)"
+            export ARCH="$(uname -m)"
+            export KERNEL="$(uname -r)"
+            export DETECTED="dynamic"
+        fi
         return 0
     else
-        # Fallback: perform detection dynamically
-        export PLATFORM=$(detect_os)
-        export DISTRO=$(detect_distro)
-        export PKG_MANAGER=$(detect_pkg_manager)
-        export ARCH=$(uname -m)
-        export KERNEL=$(uname -r)
+        # Dynamic detection fallback
+        export PLATFORM="$(detect_os)"
+        export DISTRO="$(detect_distro)"
+        export PKG_MANAGER="$(detect_pkg_manager)"
+        export ARCH="$(uname -m)"
+        export KERNEL="$(uname -r)"
         export DETECTED="dynamic"
         
         return 0
     fi
 }
 
-clear_platform_cache() {
-    local cache_file="${1:-$PLATFORM_CACHE}"
-    
-    if [[ -f "$cache_file" ]]; then
-        rm -f "$cache_file"
-        return 0
-    fi
-    
-    return 1
-}
-
 # ═══════════════════════════════════════════════════════════════════════════════
 # Service Operations
 # ═══════════════════════════════════════════════════════════════════════════════
 
-# Detect platform and export variables (dynamic mode)
-detect_and_export() {
-    export PLATFORM=$(detect_os)
-    export DISTRO=$(detect_distro)
-    export PKG_MANAGER=$(detect_pkg_manager)
-    export ARCH=$(uname -m)
-    export KERNEL=$(uname -r)
-    export DETECTED="dynamic"
-}
-
-# Get current platform info (uses cache if available)
 get_platform() {
     load_platform_info
     verify_platform
 }
 
-# Verify all required platform variables are set
 verify_platform() {
     local required_vars=(PLATFORM PKG_MANAGER ARCH)
     local missing=()
     
     for var in "${required_vars[@]}"; do
-        if [[ -z "${!var}" ]]; then
+        if [[ -z "${!var:-}" ]]; then
             missing+=("$var")
         fi
     done
@@ -175,7 +171,6 @@ verify_platform() {
     return 0
 }
 
-# Display current platform information
 show_platform() {
     get_platform || return 1
     
@@ -260,17 +255,16 @@ pkg_install() {
 }
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# Export Service Functions
+# Guard Against Multiple Sourcing
 # ═══════════════════════════════════════════════════════════════════════════════
 
-# Detection functions
-export -f detect_os detect_distro detect_pkg_manager
-
-# Cache management
-export -f save_platform_info load_platform_info clear_platform_cache
-
-# Service operations
-export -f detect_and_export get_platform verify_platform show_platform
-
-# Package manager abstractions
-export -f pkg_update pkg_install
+# Mark as loaded to prevent duplicate exports
+if [[ -z "${_PLATFORM_SERVICE_LOADED:-}" ]]; then
+    _PLATFORM_SERVICE_LOADED=1
+    
+    # Export functions only once
+    export -f detect_os detect_distro detect_pkg_manager
+    export -f save_platform_info load_platform_info
+    export -f get_platform verify_platform show_platform
+    export -f pkg_update pkg_install
+fi
