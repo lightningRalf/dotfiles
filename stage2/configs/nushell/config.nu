@@ -1,7 +1,10 @@
-# Nushell Configuration - Truly Minimal
-# Philosophy: Maximum delegation, minimum configuration
+# Nushell Configuration - Corrected for Parse-Time Constraints
+# Philosophy: Minimal configuration with proper constraint handling
 
-# Core settings only
+# ═══════════════════════════════════════════════════════════════════════════════
+# Core Configuration
+# ═══════════════════════════════════════════════════════════════════════════════
+
 $env.config = {
     show_banner: false
     edit_mode: "vi"
@@ -25,7 +28,10 @@ $env.config = {
     }
 }
 
-# Minimal keybindings - only shell integration
+# ═══════════════════════════════════════════════════════════════════════════════
+# Keybindings
+# ═══════════════════════════════════════════════════════════════════════════════
+
 $env.config.keybindings = [
     {
         name: atuin_history
@@ -36,8 +42,29 @@ $env.config.keybindings = [
     }
 ]
 
-# Load user scripts if present
+# ═══════════════════════════════════════════════════════════════════════════════
+# Script Loading
+# ═══════════════════════════════════════════════════════════════════════════════
+
+# Note: Due to Nushell's parse-time constraints, dynamic script loading
+# requires explicit source statements rather than iteration.
+# 
+# To load custom scripts, add explicit source commands here:
+# source ~/.config/nushell/scripts/custom.nu
+#
+# Or use the following pattern for a known set of scripts:
+
 let scripts_dir = $"($env.HOME)/.config/nushell/scripts"
-if ($scripts_dir | path exists) {
-    ls $"($scripts_dir)/*.nu" | each { |it| source $it.name }
+
+# Check and source specific known scripts (not dynamic)
+if ($"($scripts_dir)/aliases.nu" | path exists) {
+    source ~/.config/nushell/scripts/aliases.nu
+}
+
+if ($"($scripts_dir)/functions.nu" | path exists) {
+    source ~/.config/nushell/scripts/functions.nu
+}
+
+if ($"($scripts_dir)/completions.nu" | path exists) {
+    source ~/.config/nushell/scripts/completions.nu
 }
