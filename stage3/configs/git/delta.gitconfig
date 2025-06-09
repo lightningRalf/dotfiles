@@ -1,0 +1,64 @@
+# Git Configuration for Delta Integration - Stage 3
+# Philosophy: Visual clarity enhances understanding and reduces errors
+#
+# This configuration integrates delta as Git's diff viewer, transforming
+# the diff experience from cryptic symbols to clear, syntax-highlighted,
+# side-by-side comparisons that respect human cognitive patterns.
+
+[core]
+    # Use delta as the default pager for all git output
+    pager = delta
+
+[interactive]
+    # Use delta for interactive commands like `git add -p`
+    diffFilter = delta --color-only
+
+[delta]
+    # Core Features
+    navigate = true                   # Enable n/N navigation between files
+    light = false                     # Dark terminal theme
+    side-by-side = true              # Show diffs side-by-side
+    line-numbers = true              # Display line numbers
+    
+    # Visual Enhancements
+    syntax-theme = base16            # Consistent with bat theme
+    plus-style = "syntax #2E7D32"    # Green for additions
+    minus-style = "syntax #D32F2F"   # Red for deletions
+    
+    # UI Configuration
+    file-style = bold yellow ul      # Highlight file names
+    file-decoration-style = none
+    hunk-header-style = file line-number syntax
+    hunk-header-decoration-style = blue box
+    
+    # Performance Optimizations
+    max-line-length = 512            # Prevent performance issues
+    tabs = 4                         # Consistent with editor settings
+
+[merge]
+    # Use delta for merge conflicts
+    conflictstyle = diff3
+
+[diff]
+    # Enhanced diff output
+    colorMoved = default             # Highlight moved lines
+    algorithm = histogram            # Better diff algorithm
+
+[add.interactive]
+    # Use delta for staging patches
+    useBuiltin = false
+
+# Aliases that leverage delta's capabilities
+[alias]
+    # Visual diff shortcuts
+    diffs = diff --staged
+    diffh = diff HEAD
+    
+    # History with visual diffs
+    visual-log = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+    
+    # Show file changes with delta
+    changes = diff --name-status
+    
+    # Interactive staging with delta preview
+    interactive = add --interactive

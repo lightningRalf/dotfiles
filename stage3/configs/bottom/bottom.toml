@@ -1,0 +1,77 @@
+# bottom Configuration - Stage 3
+# Philosophy: Visual system monitoring that respects cognitive limits
+#
+# bottom demonstrates the principle of progressive information disclosure:
+# showing essential data prominently while keeping detailed metrics accessible.
+# This configuration balances information density with visual clarity.
+
+[flags]
+# Update rate in milliseconds
+# Balanced for responsiveness without excessive CPU usage
+rate = 1000
+
+# Default time window
+# Shows recent history for trend identification
+default_time_value = 60000
+
+# Temperature units
+# Celsius for international consistency
+temperature_type = "c"
+
+# Graph type
+# Dot markers for precise readings
+graph_type = "dot"
+
+# UI preferences
+# Group processes by default for clearer overview
+group_processes = true
+
+# Case-insensitive searching by default
+# Reduces cognitive load during exploration
+case_sensitive = false
+
+# Regex searching disabled by default
+# Most searches are literal, regex available when needed
+regex = false
+
+# Show average CPU in addition to per-core
+# Provides both overview and detail
+show_average_cpu = true
+
+[colors]
+# Color scheme selection
+# Base16 for consistency with other tools
+# Commented out to use terminal's color scheme by default
+# color = "base16"
+
+[cpu]
+# CPU display preferences
+default = "default"
+
+[memory]
+# Memory display format
+# Percentage view for quick assessment
+default = "percent"
+
+[network]
+# Network interface display
+# Shows all interfaces for comprehensive monitoring
+default = "default"
+
+[processes]
+# Process table configuration
+columns = ["PID", "Name", "CPU%", "Mem%", "R/s", "W/s", "State", "User"]
+
+[disk]
+# Disk display preferences
+# Filter out virtual filesystems for clarity
+[disk.mount_filter]
+is_list_ignored = true
+list = ["/dev", "/run", "/sys", "/proc", "/tmp"]
+regex = false
+case_sensitive = false
+whole_word = false
+
+[battery]
+# Battery display (if available)
+default = "default"
