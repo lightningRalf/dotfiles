@@ -28,7 +28,7 @@ log_and_run
 # 3. Enhanced navigation with zoxide
 
 pre_flight_check() {
-    local required_dirs=("logs" "scripts" "config")
+    local required_dirs=("logs" "backups" "tmp" "scripts" "config")
     
     echo "Performing pre-flight check..."
     

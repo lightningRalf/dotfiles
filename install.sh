@@ -12,8 +12,8 @@
 set -euo pipefail
 
 pre_flight_check() {
-    local required_dirs=("logs" "scripts" "config")
-    
+    local required_dirs=("logs" "backups" "tmp" "scripts" "config")
+
     echo "Performing pre-flight check..."
     
     for dir in "${required_dirs[@]}"; do
