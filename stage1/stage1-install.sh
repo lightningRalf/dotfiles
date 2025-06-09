@@ -25,6 +25,10 @@ log_success() { echo -e "${GREEN}[✓]${NC} $1"; }
 log_error() { echo -e "${RED}[✗]${NC} $1" >&2; }
 log_warning() { echo -e "${YELLOW}[!]${NC} $1"; }
 
+log_stage() { 
+    echo -e "\n${PURPLE}━━━ $1 ━━━${NC}\n" 
+}
+
 # ===== Verify Repository Structure =====
 verify_repository() {
     log_info "Verifying repository structure..."
