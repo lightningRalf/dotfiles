@@ -40,18 +40,7 @@ if (which starship | is-not-empty) {
 # Zoxide Initialization
 # ═══════════════════════════════════════════════════════════════════════════════
 
-if (which zoxide | is-not-empty) {
-    let zoxide_cache = $"($env.HOME)/.cache"
-    let zoxide_init = $"($zoxide_cache)/zoxide.nu"
-    
-    # Generate if missing
-    if not ($zoxide_init | path exists) {
-        ^zoxide init nushell | save -f $zoxide_init
-    }
-    
-    # Use `source-env` with parenthesized expression for runtime path
-    source ~/.cache/zoxide.nu
-}
+zoxide init nushell | save -f ~/.zoxide.nu
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # Atuin Configuration

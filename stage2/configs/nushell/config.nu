@@ -41,3 +41,9 @@ $env.config.keybindings = [
         event: { send: executehostcommand cmd: "atuin search -i" }
     }
 ]
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Source CLI Configs
+# ═══════════════════════════════════════════════════════════════════════════════
+
+source ~/.zoxide.nu
