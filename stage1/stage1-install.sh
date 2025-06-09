@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 #
-# Stage 1: Foundation Layer - Minimal, Focused Implementation
+# Stage 1: Foundation Layer - Pure Orchestration
 # 
-# Scope: ONLY platform detection, essential tools, and base structure
-# Philosophy: Each stage is self-contained and independent
+# Assumes all files exist in repository structure
+# Only copies and orchestrates, never generates
 
 set -euo pipefail
 
 # ===== Configuration =====
 readonly DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
 readonly STAGE_MARKER="$HOME/.dotfiles-stage1-complete"
-readonly VERSION="1.0.0"
+readonly VERSION="3.0.0"
 
 # ===== Colors =====
 readonly RED='\033[0;31m'
@@ -25,218 +25,187 @@ log_success() { echo -e "${GREEN}[✓]${NC} $1"; }
 log_error() { echo -e "${RED}[✗]${NC} $1" >&2; }
 log_warning() { echo -e "${YELLOW}[!]${NC} $1"; }
 
-# ===== Platform Detection =====
-detect_platform() {
-    log_info "Detecting platform..."
+# ===== Verify Repository Structure =====
+verify_repository() {
+    log_info "Verifying repository structure..."
     
-    local platform="linux"
-    local pkg_manager="unknown"
+    local required_files=(
+        "shared/utils/platform.sh"
+        "stage1/README.md"
+        "README.md"
+    )
     
-    # Platform detection
-    if [[ -d "/data/data/com.termux" ]]; then
-        platform="termux"
-        pkg_manager="pkg"
-    elif grep -qi microsoft /proc/version 2>/dev/null; then
-        platform="wsl"
-    elif [[ -f /.dockerenv ]]; then
-        platform="container"
-    fi
-    
-    # Package manager detection
-    if [[ "$pkg_manager" == "unknown" ]]; then
-        if command -v apt-get &>/dev/null; then
-            pkg_manager="apt"
-        elif command -v dnf &>/dev/null; then
-            pkg_manager="dnf"
-        elif command -v pacman &>/dev/null; then
-            pkg_manager="pacman"
-        elif command -v apk &>/dev/null; then
-            pkg_manager="apk"
+    for file in "${required_files[@]}"; do
+        if [[ ! -f "$DOTFILES_DIR/$file" ]]; then
+            log_error "Missing required file: $file"
+            log_error "Please ensure complete repository is cloned"
+            exit 1
         fi
-    fi
+    done
     
-    # Save platform info
-    cat > "$DOTFILES_DIR/.platform" << EOF
-PLATFORM=$platform
-PKG_MANAGER=$pkg_manager
-ARCH=$(uname -m)
-KERNEL=$(uname -r)
-DETECTED=$(date -u +"%Y-%m-%d %H:%M:%S UTC")
-EOF
-    
-    export PLATFORM="$platform"
-    export PKG_MANAGER="$pkg_manager"
-    
-    log_success "Platform: $PLATFORM | Package Manager: $PKG_MANAGER"
+    log_success "Repository structure verified"
 }
 
-# ===== Create Base Structure =====
-create_base_structure() {
-    log_info "Creating base directory structure..."
+# ===== Create Directory Structure =====
+create_directories() {
+    log_info "Creating directory structure..."
     
-    # Minimal structure - stages manage their own subdirectories
     local dirs=(
-        "stage1"
-        "stage2"
-        "stage3"
-        "stage4"
-        "stage5"
-        "shared/utils"
-        "docs"
+        ".cache"
+        "backups"
     )
     
     for dir in "${dirs[@]}"; do
         mkdir -p "$DOTFILES_DIR/$dir"
     done
     
-    log_success "Base structure created"
+    log_success "Directory structure created"
+}
+
+# ===== Make Scripts Executable =====
+set_permissions() {
+    log_info "Setting script permissions..."
+    
+    # Make all shell scripts executable
+    find "$DOTFILES_DIR" -name "*.sh" -type f -exec chmod +x {} \;
+    
+    log_success "Permissions set"
+}
+
+# ===== Platform Detection and Caching =====
+detect_and_cache_platform() {
+    log_info "Detecting platform..."
+    
+    # Source platform service
+    source "$DOTFILES_DIR/shared/utils/platform.sh"
+    
+    # Save platform information
+    save_platform_info
+    
+    # Load and display
+    get_platform
+    show_platform
+    
+    log_success "Platform detection complete"
 }
 
 # ===== Install Foundation Tools =====
 install_foundation_tools() {
     log_info "Installing foundation tools..."
     
-    # Only the absolute essentials
-    local tools=""
+    # Source platform service for package management
+    source "$DOTFILES_DIR/shared/utils/platform.sh"
+    
+    # Update repositories
+    pkg_update
+    
+    # Platform-specific foundation packages
+    local packages="git curl"
     
     case "$PKG_MANAGER" in
-        apt)
-            sudo apt-get update -qq
-            tools="git curl build-essential"
-            sudo apt-get install -y -qq $tools
+        apt|pkg)
+            packages+=" build-essential"
             ;;
-        dnf)
-            sudo dnf check-update -q || true
-            tools="git curl @development-tools"
-            sudo dnf install -y -q $tools
+        dnf|yum)
+            packages+=" gcc gcc-c++ make"
             ;;
         pacman)
-            sudo pacman -Sy --noconfirm
-            tools="git curl base-devel"
-            sudo pacman -S --noconfirm --needed $tools
+            packages+=" base-devel"
             ;;
-        pkg)
-            pkg update -y
-            tools="git curl"
-            pkg install -y $tools
+        zypper)
+            packages+=" gcc gcc-c++ make"
             ;;
-        *)
-            log_warning "Manual tool installation required for: $PKG_MANAGER"
+        apk)
+            packages+=" build-base"
             ;;
     esac
     
-    log_success "Foundation tools installed"
-}
-
-# ===== Create Stage Documentation =====
-create_documentation() {
-    log_info "Creating documentation..."
-    
-    # Main README
-    cat > "$DOTFILES_DIR/README.md" << 'EOF'
-# Portable Development Environment
-
-A modular, staged approach to system configuration.
-
-## Philosophy
-
-- **Stage Independence**: Each stage is self-contained
-- **Static Configuration**: All configs exist as files, not generated code
-- **Progressive Enhancement**: Each stage builds upon the previous
-
-## Five-Stage Architecture
-
-1. **Foundation**: Platform detection and essential tools (git, curl)
-2. **Shell Evolution**: Modern shell with Nushell, Starship, Atuin
-3. **CLI Modernization**: Enhanced replacements for Unix tools  
-4. **Development Ecosystem**: Language managers and development tools
-5. **Integration & Polish**: Automation and professional finishing
-
-## Installation
-
-```bash
-# Stage 1: Foundation
-./stage1/install.sh
-
-# Stage 2: Shell Evolution  
-./stage2/install.sh
-
-# Continue with subsequent stages...
-```
-
-Each stage can be installed independently once its prerequisites are met.
-
-## Structure
-
-```
-dotfiles/
-├── stage1/     # Foundation installer
-├── stage2/     # Shell evolution (configs + installer)
-├── stage3/     # CLI tools (configs + installer)
-├── stage4/     # Development tools (configs + installer)
-├── stage5/     # Integration (configs + installer)
-├── shared/     # Utilities shared across stages
-└── docs/       # Additional documentation
-```
-EOF
-
-    # Stage 1 specific docs
-    cat > "$DOTFILES_DIR/stage1/README.md" << 'EOF'
-# Stage 1: Foundation Layer
-
-## Purpose
-
-Establishes the minimal foundation required for all subsequent stages:
-- Platform detection
-- Essential tool installation (git, curl, build tools)
-- Basic directory structure
-
-## What This Stage Does NOT Do
-
-- Install any user-facing tools
-- Create any configuration files
-- Make any shell modifications
-
-## Post-Installation
-
-After Stage 1:
-1. Review platform detection: `cat ~/dotfiles/.platform`
-2. Proceed to Stage 2 when ready
-
-## Files Created
-
-- `.platform` - Platform detection results
-- Base directory structure for future stages
-EOF
-
-    log_success "Documentation created"
-}
-
-# ===== Create Shared Utilities =====
-create_shared_utilities() {
-    log_info "Creating shared utilities..."
-    
-    # Platform detection utility
-    cat > "$DOTFILES_DIR/shared/utils/platform.sh" << 'EOF'
-#!/usr/bin/env bash
-# Shared platform detection utilities
-
-load_platform_info() {
-    local platform_file="${DOTFILES_DIR:-$HOME/dotfiles}/.platform"
-    if [[ -f "$platform_file" ]]; then
-        source "$platform_file"
+    # Install packages
+    if pkg_install $packages; then
+        log_success "Foundation tools installed"
     else
-        echo "Error: Platform info not found. Run stage1/install.sh first."
-        return 1
+        log_warning "Some tools may have failed to install"
     fi
 }
 
-# Make function available
-export -f load_platform_info
-EOF
+# ===== Initialize Git Configuration Files =====
+install_configs() {
+    log_stage "Installing Foundation Configurations"
     
-    chmod +x "$DOTFILES_DIR/shared/utils/platform.sh"
-    log_success "Shared utilities created"
+    local config_dir="$DOTFILES_DIR/stage1/configs"
+    local scripts_dir="$DOTFILES_DIR/stage1/scripts"
+    
+    # Git configuration installation and setup
+    if [[ -f "$config_dir/git/gitconfig" ]]; then
+        log_info "Installing Git configuration..."
+        
+        # Backup existing configuration if present
+        if [[ -f "$HOME/.gitconfig" ]]; then
+            cp "$HOME/.gitconfig" "$DOTFILES_DIR/backups/gitconfig.$(date +%Y%m%d_%H%M%S)"
+            log_info "Existing .gitconfig backed up"
+        fi
+        
+        # Install base configuration
+        cp "$config_dir/git/gitconfig" "$HOME/.gitconfig"
+        log_success "Git base configuration installed"
+        
+        # Check if personalization needed
+        if ! git config --global user.name &>/dev/null || ! git config --global user.email &>/dev/null; then
+            # Run personalization script if available
+            if [[ -f "$scripts_dir/setup-git.sh" ]]; then
+                log_info "Running Git personalization..."
+                source "$scripts_dir/setup-git.sh"
+                setup_git_config
+            else
+                # Fallback: inline personalization
+                log_warning "Git user configuration required for repository initialization"
+                
+                # Interactive prompts with validation
+                while [[ -z "${git_name:-}" ]]; do
+                    read -p "Enter your full name for Git commits: " git_name
+                done
+                
+                while [[ -z "${git_email:-}" ]]; do
+                    read -p "Enter your email for Git commits: " git_email
+                done
+                
+                # Apply configuration
+                git config --global user.name "$git_name"
+                git config --global user.email "$git_email"
+                
+                log_success "Git user configuration set"
+            fi
+        else
+            log_info "Git user configuration already exists"
+        fi
+        
+        # Verify configuration is valid
+        if git config --global user.name &>/dev/null && git config --global user.email &>/dev/null; then
+            log_success "Git configuration verified"
+            log_info "Git user: $(git config --global user.name) <$(git config --global user.email)>"
+        else
+            log_error "Git configuration verification failed"
+            return 1
+        fi
+    else
+        log_warning "Git configuration file not found, skipping"
+    fi
+    
+    return 0
+}
+
+# ===== Initialize Git Repository =====
+init_git_repo() {
+    if [[ ! -d "$DOTFILES_DIR/.git" ]]; then
+        log_info "Initializing git repository..."
+        cd "$DOTFILES_DIR"
+        git init
+        git add .
+        git commit -m "Initial commit: Stage 1 foundation"
+        log_success "Git repository initialized"
+    else
+        log_info "Git repository already exists"
+    fi
 }
 
 # ===== Main =====
@@ -250,33 +219,29 @@ main() {
         exit 0
     fi
     
-    # Ensure base directory exists
-    mkdir -p "$DOTFILES_DIR"
+    # Change to dotfiles directory
     cd "$DOTFILES_DIR"
     
     # Core operations
-    detect_platform
-    create_base_structure
+    verify_repository
+    create_directories
+    set_permissions
+    detect_and_cache_platform
     install_foundation_tools
-    create_documentation
-    create_shared_utilities
-    
-    # Initialize git repo
-    if [[ ! -d .git ]]; then
-        git init
-        git add .
-        git commit -m "Stage 1: Foundation layer complete"
-        log_success "Git repository initialized"
-    fi
+    install_configs
+    init_git_repo
     
     # Mark complete
     date -u +"%Y-%m-%d %H:%M:%S UTC" > "$STAGE_MARKER"
     
     # Summary
     echo -e "\n${GREEN}Stage 1 Complete!${NC}\n"
-    echo "Foundation established. You may now proceed to:"
-    echo -e "  ${BLUE}./stage2/install.sh${NC} - Shell Evolution"
-    echo -e "\nPlatform info saved to: ${YELLOW}$DOTFILES_DIR/.platform${NC}"
+    echo "Foundation established with:"
+    echo "  - Platform detection service"
+    echo "  - Foundation tools installed"
+    echo "  - Git configuration files installed"
+    echo "  - Repository structure verified"
+    echo -e "\nNext: ${BLUE}./stage2/install.sh${NC}"
 }
 
 # Execute
