@@ -206,6 +206,13 @@ install_configs() {
     mkdir -p "$CONFIG_DIR/atuin"
     cp "$STAGE_DIR/configs/atuin/config.toml" "$CONFIG_DIR/atuin/"
     log_success "Atuin configuration installed"
+
+    # ssh-agent configuration
+    if [[ -f "$STAGE_DIR/configs/nushell/ssh-agent.nu" ]]; then
+        mkdir -p "$CONFIG_DIR/nushell"
+        cp "$STAGE_DIR/configs/nushell/ssh-agent.nu" "$CONFIG_DIR/nushell/"
+        log_success "nushell ssh-agent configuration installed"
+    fi
 }
 
 # ===== Pre-generate Nushell Caches =====

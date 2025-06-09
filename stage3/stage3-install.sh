@@ -258,6 +258,7 @@ install_configs() {
         git config --global delta.line-numbers true
         log_success "Git configured to use delta"
     fi
+
 }
 
 # ===== Setup Shell Integration =====
