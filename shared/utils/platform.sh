@@ -91,15 +91,15 @@ save_platform_info() {
     # Ensure directory exists
     mkdir -p "$(dirname "$cache_file")"
     
-    # Perform detection and save
+    # Perform detection and save with proper quoting
     cat > "$cache_file" << EOF
 # Platform detection cache - generated $(date -u +"%Y-%m-%d %H:%M:%S UTC")
-PLATFORM=$(detect_os)
-DISTRO=$(detect_distro)
-PKG_MANAGER=$(detect_pkg_manager)
-ARCH=$(uname -m)
-KERNEL=$(uname -r)
-DETECTED=$(date -u +"%Y-%m-%d %H:%M:%S UTC")
+PLATFORM="$(detect_os)"
+DISTRO="$(detect_distro)"
+PKG_MANAGER="$(detect_pkg_manager)"
+ARCH="$(uname -m)"
+KERNEL="$(uname -r)"
+DETECTED="$(date -u +"%Y-%m-%d %H:%M:%S UTC")"
 EOF
     
     return 0
