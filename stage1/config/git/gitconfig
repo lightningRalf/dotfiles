@@ -1,0 +1,101 @@
+# Git Configuration - Stage 1 Foundation
+# This is the base configuration without user-specific settings
+
+[core]
+    # Use system editor, fallback to nano
+    editor = ${EDITOR:-nano}
+    
+    # Handle line endings intelligently
+    autocrlf = input
+    safecrlf = warn
+    
+    # Better diff algorithm
+    algorithm = histogram
+
+[init]
+    # Modern default branch naming
+    defaultBranch = main
+
+[color]
+    # Enable color output
+    ui = auto
+    
+[color "branch"]
+    current = yellow reverse
+    local = yellow
+    remote = green
+
+[color "diff"]
+    meta = yellow bold
+    frag = magenta bold
+    old = red bold
+    new = green bold
+
+[color "status"]
+    added = green
+    changed = yellow
+    untracked = cyan
+
+[push]
+    # Push current branch by default
+    default = current
+    
+    # Push tags with commits
+    followTags = true
+
+[pull]
+    # Rebase instead of merge on pull
+    rebase = true
+
+[fetch]
+    # Prune deleted remote branches
+    prune = true
+
+[merge]
+    # Include summary in merge commits
+    log = true
+
+[alias]
+    # Status shortcuts
+    st = status -sb
+    sts = status
+    
+    # Commit shortcuts
+    ci = commit
+    cm = commit -m
+    amend = commit --amend --no-edit
+    
+    # Branch shortcuts
+    br = branch
+    co = checkout
+    cob = checkout -b
+    
+    # Diff shortcuts
+    df = diff
+    dfs = diff --staged
+    
+    # Log shortcuts
+    lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+    last = log -1 HEAD
+    
+    # Utility shortcuts
+    unstage = reset HEAD --
+    undo = reset HEAD~1 --mixed
+    
+    # Show aliases
+    aliases = config --get-regexp alias
+
+[diff]
+    # Use more meaningful diff prefixes
+    mnemonicPrefix = true
+    
+    # Better rename detection
+    renames = copies
+
+[help]
+    # Correct typos
+    autocorrect = 1
+
+[rerere]
+    # Remember resolved conflicts
+    enabled = true

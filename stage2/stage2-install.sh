@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 #
-# Stage 2: Shell Evolution - Dynamic Detection Version
-# Uses runtime platform detection instead of cached values
+# Stage 2: Shell Evolution - Pure Orchestration
+# 
+# Assumes all configuration files exist in stage2/configs/
+# Only copies files and installs tools, never generates content
 
 set -euo pipefail
 
@@ -10,233 +12,254 @@ readonly DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
 readonly STAGE_DIR="$DOTFILES_DIR/stage2"
 readonly CONFIG_DIR="$HOME/.config"
 readonly STAGE_MARKER="$HOME/.dotfiles-stage2-complete"
+readonly VERSION="3.0.0"
 
 # ===== Colors =====
+readonly RED='\033[0;31m'
 readonly GREEN='\033[0;32m'
 readonly BLUE='\033[0;34m'
+readonly YELLOW='\033[1;33m'
 readonly NC='\033[0m'
 
 # ===== Logging =====
 log_info() { echo -e "${BLUE}[INFO]${NC} $1"; }
 log_success() { echo -e "${GREEN}[✓]${NC} $1"; }
+log_error() { echo -e "${RED}[✗]${NC} $1" >&2; }
+log_warning() { echo -e "${YELLOW}[!]${NC} $1"; }
+log_stage() { echo -e "\n${BLUE}═══ $1 ═══${NC}\n"; }
 
-# ===== Load Platform Detection Functions =====
-source "$DOTFILES_DIR/shared/utils/platform.sh"
-
-# ===== Platform Detection =====
-detect_platform() {
-    # Use the dynamic detection functions
-    export PLATFORM=$(detect_os)
-    export DISTRO=$(detect_distro) 
-    export PKG_MANAGER=$(detect_pkg_manager)
-    export ARCH=$(uname -m)
+# ===== Verify Prerequisites =====
+verify_prerequisites() {
+    log_info "Verifying prerequisites..."
     
-    log_info "Detected: $PLATFORM | $PKG_MANAGER | $DISTRO | $ARCH"
+    # Check Stage 1 completion
+    if [[ ! -f "$HOME/.dotfiles-stage1-complete" ]]; then
+        log_error "Stage 1 not completed. Please run stage1/install.sh first."
+        exit 1
+    fi
+    
+    # Verify platform service exists
+    if [[ ! -f "$DOTFILES_DIR/shared/utils/platform.sh" ]]; then
+        log_error "Platform service not found"
+        exit 1
+    fi
+    
+    # Verify configuration files exist
+    local required_configs=(
+        "configs/nushell/config.nu"
+        "configs/nushell/env.nu"
+        "configs/starship.toml"
+        "configs/atuin/config.toml"
+    )
+    
+    for config in "${required_configs[@]}"; do
+        if [[ ! -f "$STAGE_DIR/$config" ]]; then
+            log_error "Missing configuration: $config"
+            exit 1
+        fi
+    done
+    
+    log_success "Prerequisites verified"
 }
 
-# ===== Copy Configuration Files =====
-install_configs() {
-    log_info "Installing configuration files..."
-    
-    # Nushell
-    mkdir -p "$CONFIG_DIR/nushell"
-    cp "$STAGE_DIR/configs/nushell/config.nu" "$CONFIG_DIR/nushell/"
-    cp "$STAGE_DIR/configs/nushell/env.nu" "$CONFIG_DIR/nushell/"
-    
-    # Starship
-    cp "$STAGE_DIR/configs/starship.toml" "$CONFIG_DIR/starship.toml"
-    
-    # Atuin
-    mkdir -p "$CONFIG_DIR/atuin"
-    cp "$STAGE_DIR/configs/atuin/config.toml" "$CONFIG_DIR/atuin/"
-    
-    log_success "Configurations installed"
+# ===== Load Platform Service =====
+load_platform_service() {
+    source "$DOTFILES_DIR/shared/utils/platform.sh"
+    get_platform || exit 1
+    log_success "Platform service loaded: $PLATFORM | $PKG_MANAGER"
 }
 
-# ===== Build Dependencies Installation =====
-install_build_dependencies() {
+# ===== Install Build Dependencies =====
+install_build_deps() {
     log_stage "Installing Build Dependencies"
     
-    local deps_needed=false
-    
-    # Check if pkg-config exists
-    if ! command -v pkg-config &>/dev/null; then
-        deps_needed=true
-        log_warning "pkg-config not found"
-    fi
-    
-    # Check if OpenSSL development headers are available
-    if ! pkg-config --exists openssl 2>/dev/null; then
-        deps_needed=true
-        log_warning "OpenSSL development headers not found"
-    fi
-    
-    if [[ "$deps_needed" == "false" ]]; then
-        log_success "Build dependencies already satisfied"
-        return 0
-    fi
-    
-    log_info "Installing required build dependencies..."
+    local deps=""
     
     case "$PKG_MANAGER" in
         apt)
-            sudo apt-get update -qq
-            sudo apt-get install -y pkg-config libssl-dev build-essential
+            deps="pkg-config libssl-dev"
             ;;
-        dnf)
-            sudo dnf install -y pkg-config openssl-devel gcc gcc-c++ make
-            ;;
-        yum)
-            sudo yum install -y pkg-config openssl-devel gcc gcc-c++ make
+        dnf|yum)
+            deps="pkg-config openssl-devel"
             ;;
         pacman)
-            sudo pacman -S --needed --noconfirm pkg-config openssl base-devel
+            deps="pkg-config openssl"
             ;;
         zypper)
-            sudo zypper install -y pkg-config libopenssl-devel gcc gcc-c++ make
+            deps="pkg-config libopenssl-devel"
             ;;
         apk)
-            sudo apk add --no-cache pkgconfig openssl-dev build-base
+            deps="pkgconfig openssl-dev"
             ;;
-        pkg)  # Termux
-            pkg install -y pkg-config openssl openssl-dev build-essential
+        pkg)
+            deps="pkg-config openssl"
             ;;
-        *)
-            log_error "Unsupported package manager for automatic dependency installation"
-            log_info "Please install: pkg-config, OpenSSL dev headers, C compiler"
-            exit 1
+        brew)
+            deps="pkg-config openssl"
             ;;
     esac
     
-    # Verify installation succeeded
-    if pkg-config --exists openssl 2>/dev/null; then
-        log_success "Build dependencies installed successfully"
-    else
-        log_error "Failed to install build dependencies"
-        exit 1
+    if [[ -n "$deps" ]]; then
+        log_info "Installing: $deps"
+        pkg_install $deps || log_warning "Some dependencies failed"
     fi
 }
 
-# ===== Rust Installation =====
-install_rust_toolchain() {
+# ===== Install Rust =====
+install_rust() {
     log_stage "Installing Rust Toolchain"
     
     if command -v rustc &>/dev/null; then
-        log_info "Rust already installed, updating..."
+        log_info "Rust already installed: $(rustc --version)"
         rustup update stable
     else
-        log_info "Installing Rust..."
-        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path
-        source "$HOME/.cargo/env"
+        case "$PLATFORM" in
+            termux)
+                pkg_install rust
+                ;;
+            *)
+                curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | \
+                    sh -s -- -y --no-modify-path
+                source "$HOME/.cargo/env"
+                ;;
+        esac
     fi
     
-    if command -v cargo &>/dev/null; then
-        log_success "Rust installed: $(rustc --version)"
-    else
-        log_error "Rust installation failed"
-        exit 1
-    fi
+    export PATH="$HOME/.cargo/bin:$PATH"
 }
 
-# ===== Tool Installation with Fallbacks =====
-install_cli_tools() {
-    log_stage "Installing Modern CLI Tools"
-    
-    # Ensure cargo is in PATH
-    export PATH="$HOME/.cargo/bin:$PATH"
+# ===== Install Shell Tools =====
+install_tools() {
+    log_stage "Installing Shell Evolution Tools"
     
     # Nushell
     if ! command -v nu &>/dev/null; then
         log_info "Installing Nushell..."
-        if [[ "$PKG_MANAGER" == "pkg" ]]; then
-            pkg install -y nushell
-        else
-            cargo install nu --locked || {
-                log_warning "Cargo install failed, trying pre-built binary..."
-                install_nushell_binary
-            }
-        fi
+        case "$PKG_MANAGER" in
+            pkg|brew)
+                pkg_install nushell
+                ;;
+            *)
+                cargo install nu --locked
+                ;;
+        esac
     fi
     
     # Starship
     if ! command -v starship &>/dev/null; then
         log_info "Installing Starship..."
-        if [[ "$PKG_MANAGER" == "pkg" ]]; then
-            pkg install -y starship
-        else
-            curl -sS https://starship.rs/install.sh | sh -s -- -y
-        fi
+        case "$PKG_MANAGER" in
+            pkg|brew)
+                pkg_install starship
+                ;;
+            *)
+                curl -sS https://starship.rs/install.sh | sh -s -- -y
+                ;;
+        esac
     fi
     
     # Zoxide
     if ! command -v zoxide &>/dev/null; then
         log_info "Installing Zoxide..."
-        if [[ "$PKG_MANAGER" == "pkg" ]]; then
-            pkg install -y zoxide
-        else
-            cargo install zoxide --locked
-        fi
+        case "$PKG_MANAGER" in
+            pkg|brew)
+                pkg_install zoxide
+                ;;
+            *)
+                cargo install zoxide --locked
+                ;;
+        esac
     fi
     
-    # Atuin (optional - may fail on some platforms)
+    # Atuin (optional)
     if ! command -v atuin &>/dev/null; then
-        log_info "Installing Atuin..."
-        if [[ "$PKG_MANAGER" == "pkg" ]]; then
-            pkg install -y atuin 2>/dev/null || log_warning "Atuin not available in Termux"
-        else
-            cargo install atuin --locked || log_warning "Atuin installation failed (non-critical)"
-        fi
+        log_info "Installing Atuin (optional)..."
+        case "$PKG_MANAGER" in
+            brew)
+                pkg_install atuin
+                ;;
+            pkg)
+                pkg_install atuin 2>/dev/null || log_warning "Atuin not available"
+                ;;
+            *)
+                cargo install atuin --locked || log_warning "Atuin failed (optional)"
+                ;;
+        esac
     fi
+}
+
+# ===== Copy Configurations =====
+install_configs() {
+    log_stage "Installing Configuration Files"
     
-    # Verify critical tools
-    local critical_tools=("nu" "starship" "zoxide")
-    for tool in "${critical_tools[@]}"; do
-        if ! command -v "$tool" &>/dev/null; then
-            log_error "Failed to install critical tool: $tool"
-            exit 1
+    # Nushell
+    mkdir -p "$CONFIG_DIR/nushell"
+    cp "$STAGE_DIR/configs/nushell/config.nu" "$CONFIG_DIR/nushell/"
+    cp "$STAGE_DIR/configs/nushell/env.nu" "$CONFIG_DIR/nushell/"
+    log_success "Nushell configuration installed"
+    
+    # Starship
+    cp "$STAGE_DIR/configs/starship.toml" "$CONFIG_DIR/starship.toml"
+    log_success "Starship configuration installed"
+    
+    # Atuin
+    mkdir -p "$CONFIG_DIR/atuin"
+    cp "$STAGE_DIR/configs/atuin/config.toml" "$CONFIG_DIR/atuin/"
+    log_success "Atuin configuration installed"
+}
+
+# ===== Verify Installation =====
+verify_installation() {
+    log_stage "Verifying Installation"
+    
+    local tools=("nu" "starship" "zoxide")
+    local missing=()
+    
+    for tool in "${tools[@]}"; do
+        if command -v "$tool" &>/dev/null; then
+            log_success "$tool: $(command -v $tool)"
+        else
+            missing+=("$tool")
         fi
     done
     
-    log_success "CLI tools installed"
+    # Atuin is optional
+    if command -v atuin &>/dev/null; then
+        log_success "atuin: $(command -v atuin) (optional)"
+    else
+        log_info "atuin: not installed (optional)"
+    fi
+    
+    if [[ ${#missing[@]} -gt 0 ]]; then
+        log_error "Missing critical tools: ${missing[*]}"
+        exit 1
+    fi
 }
-
-# ===== Fallback: Install Nushell Binary =====
-install_nushell_binary() {
-    local nu_version="0.91.0"  # Update as needed
-    local arch=$(uname -m)
-    local platform=$(uname -s | tr '[:upper:]' '[:lower:]')
-    
-    case "$arch" in
-        x86_64) arch="x86_64" ;;
-        aarch64) arch="aarch64" ;;
-        *) log_error "Unsupported architecture: $arch"; return 1 ;;
-    esac
-    
-    local download_url="https://github.com/nushell/nushell/releases/download/${nu_version}/nu-${nu_version}-${arch}-unknown-${platform}-gnu.tar.gz"
-    
-    log_info "Downloading Nushell binary..."
-    cd /tmp
-    curl -L -o nu.tar.gz "$download_url"
-    tar -xzf nu.tar.gz
-    sudo mv nu-${nu_version}-*/nu /usr/local/bin/
-    rm -rf nu.tar.gz nu-${nu_version}-*
-    cd -
-}
-
 
 # ===== Main =====
 main() {
-    echo -e "\n${BLUE}Stage 2: Shell Evolution${NC}\n"
+    echo -e "\n${BLUE}Stage 2: Shell Evolution${NC}"
+    echo -e "${BLUE}Version: $VERSION${NC}\n"
     
-    detect_platform
+    # Core workflow
+    verify_prerequisites
+    load_platform_service
+    install_build_deps
+    install_rust
+    install_tools
     install_configs
-    install_build_dependencies
-    install_rust_toolchain
-    install_cli_tools
-    install_nushell_binary
-
-    date > "$STAGE_MARKER"
+    verify_installation
+    
+    # Mark complete
+    date -u +"%Y-%m-%d %H:%M:%S UTC" > "$STAGE_MARKER"
+    
+    # Summary
     echo -e "\n${GREEN}Stage 2 Complete!${NC}"
+    echo -e "\nTo start using Nushell: ${YELLOW}nu${NC}"
+    echo -e "To set as default: ${YELLOW}chsh -s $(command -v nu)${NC}"
 }
 
-main "$@"
+# Execute
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    main "$@"
+fi
