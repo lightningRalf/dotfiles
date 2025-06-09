@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
 #
-# Stage 2: Shell Evolution - Installer Only
-# 
-# This script ONLY orchestrates installation.
-# All configurations exist as separate files in stage2/configs/
+# Stage 2: Shell Evolution - Dynamic Detection Version
+# Uses runtime platform detection instead of cached values
 
 set -euo pipefail
 
@@ -22,10 +20,18 @@ readonly NC='\033[0m'
 log_info() { echo -e "${BLUE}[INFO]${NC} $1"; }
 log_success() { echo -e "${GREEN}[✓]${NC} $1"; }
 
-# ===== Load Platform Info =====
-load_platform() {
-    source "$DOTFILES_DIR/shared/utils/platform.sh"
-    load_platform_info || exit 1
+# ===== Load Platform Detection Functions =====
+source "$DOTFILES_DIR/shared/utils/platform.sh"
+
+# ===== Platform Detection =====
+detect_platform() {
+    # Use the dynamic detection functions
+    export PLATFORM=$(detect_os)
+    export DISTRO=$(detect_distro) 
+    export PKG_MANAGER=$(detect_pkg_manager)
+    export ARCH=$(uname -m)
+    
+    log_info "Detected: $PLATFORM | $PKG_MANAGER | $DISTRO | $ARCH"
 }
 
 # ===== Copy Configuration Files =====
@@ -45,30 +51,6 @@ install_configs() {
     cp "$STAGE_DIR/configs/atuin/config.toml" "$CONFIG_DIR/atuin/"
     
     log_success "Configurations installed"
-}
-
-# ===== Logging Functions =====
-log_info() { echo -e "${BLUE}[INFO]${NC} $1"; }
-log_success() { echo -e "${GREEN}[✓]${NC} $1"; }
-log_warning() { echo -e "${YELLOW}[!]${NC} $1"; }
-log_error() { echo -e "${RED}[✗]${NC} $1" >&2; }
-log_stage() { echo -e "\n${PURPLE}━━━ $1 ━━━${NC}\n"; }
-
-# ===== Stage Verification =====
-verify_prerequisites() {
-    log_stage "Verifying Prerequisites"
-    
-    if [[ ! -f "$STAGE_MARKER" ]] || [[ $(cat "$STAGE_MARKER") -lt "$REQUIRED_STAGE" ]]; then
-        log_error "Stage 1 must be completed first."
-        exit 1
-    fi
-    
-    PLATFORM=$(detect_os)
-    DISTRO=$(detect_distro)
-    PKG_MANAGER=$(detect_pkg_manager)
-    
-    log_success "Prerequisites verified"
-    log_info "Platform: $PLATFORM | Distribution: $DISTRO | Package Manager: $PKG_MANAGER"
 }
 
 # ===== Build Dependencies Installation =====
@@ -241,14 +223,18 @@ install_nushell_binary() {
     cd -
 }
 
+
 # ===== Main =====
 main() {
     echo -e "\n${BLUE}Stage 2: Shell Evolution${NC}\n"
     
-    load_platform
+    detect_platform
     install_configs
-    install_tools
-    
+    install_build_dependencies
+    install_rust_toolchain
+    install_cli_tools
+    install_nushell_binary
+
     date > "$STAGE_MARKER"
     echo -e "\n${GREEN}Stage 2 Complete!${NC}"
 }
