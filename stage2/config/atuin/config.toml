@@ -1,0 +1,50 @@
+# Atuin Configuration - Stage 2
+# Philosophy: Transform shell history from ephemeral to permanent knowledge base
+
+## Synchronization Settings
+sync_frequency = "5m"
+sync_address = "https://api.atuin.sh"
+auto_sync = true
+update_check = true
+
+## Search Configuration
+search_mode = "fuzzy"
+filter_mode = "global"
+filter_mode_shell_up_key_binding = "session"
+style = "compact"
+inline_height = 10
+show_preview = true
+show_help = false
+exit_mode = "return-query"
+
+## History Settings
+history_filter = [
+    "^Bearer ",
+    "^token=",
+    "password",
+    "passwd",
+    "secret",
+    "api[_-]?key",
+    "apikey",
+    "--api-key",
+    "AWS_SECRET_ACCESS_KEY",
+    "AWS_SESSION_TOKEN",
+]
+
+## Privacy Configuration
+secrets_filter = true
+db_path = "~/.local/share/atuin/history.db"
+key_path = "~/.local/share/atuin/key"
+session_path = "~/.local/share/atuin/session"
+
+## UI Preferences
+show_tabs = false
+invert = false
+dialect = "us"
+
+## Import Settings
+import_dirs = [
+    "~/.bash_history",
+    "~/.zsh_history",
+    "~/.config/fish/fish_history",
+]
