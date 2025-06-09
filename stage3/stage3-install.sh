@@ -337,8 +337,7 @@ verify_installation() {
 
 # ===== Print Usage Guide =====
 print_usage_guide() {
-    cat << EOF
-
+    echo -e "\n\
 ${GREEN}Stage 3 Complete!${NC}
 
 ${BLUE}Modern CLI Tools Installed:${NC}
@@ -367,7 +366,7 @@ ${BLUE}Quick Start:${NC}
   fd pattern
   
   ${GREEN}# Search in files${NC}
-  rg "search term"
+  rg \"search term\"
   
   ${GREEN}# Interactive file search${NC}
   rg pattern | fzf --preview 'bat {1}'
@@ -379,9 +378,9 @@ ${BLUE}Next Steps:${NC}
   - Explore each tool with --help
   - Check ~/.config for tool configurations
   - Run ${YELLOW}nu${NC} to use enhanced commands in Nushell
-
-EOF
+"
 }
+
 
 # ===== Main =====
 main() {
