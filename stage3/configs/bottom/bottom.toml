@@ -46,7 +46,7 @@ show_average_cpu = true
 
 [cpu]
 # CPU display preferences
-default = "default"
+default = "all"
 
 [memory]
 # Memory display format
@@ -56,7 +56,7 @@ default = "percent"
 [network]
 # Network interface display
 # Shows all interfaces for comprehensive monitoring
-default = "default"
+default = "all"
 
 [processes]
 # Process table configuration
@@ -72,6 +72,3 @@ regex = false
 case_sensitive = false
 whole_word = false
 
-[battery]
-# Battery display (if available)
-default = "default"
