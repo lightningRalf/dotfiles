@@ -1,12 +1,12 @@
-# SSH Agent Management Module
-# Provides automatic discovery and connection to SSH agents
+# SSH Agent Management Module - Corrected for Nushell Syntax
+# ~/.config/nushell/ssh-agent.nu
 
-# Main connection function
+# Main connection function with proper error handling
 export def connect_ssh_agent [] {
     # Check existing environment
     if (($env.SSH_AUTH_SOCK? | is-not-empty) and 
         ($env.SSH_AUTH_SOCK | path exists)) {
-        let test = (ssh-add -l 2>&1 | complete)
+        let test = (ssh-add -l | complete)
         if $test.exit_code != 2 {
             return {status: "existing", socket: $env.SSH_AUTH_SOCK}
         }
@@ -28,7 +28,7 @@ export def connect_ssh_agent [] {
     # Test each socket
     for socket in $sockets {
         $env.SSH_AUTH_SOCK = $socket
-        let test = (ssh-add -l 2>&1 | complete)
+        let test = (ssh-add -l | complete)
         if $test.exit_code != 2 {
             return {status: "connected", socket: $socket}
         }
@@ -37,7 +37,7 @@ export def connect_ssh_agent [] {
     return {status: "none", socket: null}
 }
 
-# Key loading automation
+# Key loading automation with proper error capture
 export def load_ssh_keys [] {
     let keys = [
         {path: "~/.ssh/github_key", host: "github.com"},
@@ -45,7 +45,7 @@ export def load_ssh_keys [] {
         {path: "~/.ssh/id_rsa", host: "legacy"}
     ]
     
-    let loaded = (ssh-add -l 2>&1 | complete)
+    let loaded = (ssh-add -l | complete)
     if $loaded.exit_code == 2 {
         print "❌ Cannot connect to SSH agent"
         return
@@ -99,11 +99,11 @@ export def ssh-status [] {
         }
     }
     
-    # Key status
+    # Key status with proper error handling
     print "\n🔑 Loaded Keys:"
-    let keys = (ssh-add -l 2>&1 | complete)
+    let keys = (ssh-add -l | complete)
     if $keys.exit_code == 0 {
-        if ($keys.stdout | str trim | is-empty) {
+        if ($keys.stdout | str trim) == "The agent has no identities." {
             print "  No keys loaded"
         } else {
             $keys.stdout | lines | each { |line|
