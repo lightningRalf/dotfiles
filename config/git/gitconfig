@@ -1,0 +1,30 @@
+# Basic Git Configuration - Stage 1
+
+[core]
+    editor = ${EDITOR:-nano}
+    autocrlf = input
+    safecrlf = warn
+
+[init]
+    defaultBranch = main
+
+[color]
+    ui = auto
+
+[push]
+    default = current
+
+[pull]
+    rebase = true
+
+[alias]
+    st = status
+    co = checkout
+    br = branch
+    ci = commit
+    unstage = reset HEAD --
+    last = log -1 HEAD
+    visual = !gitk
+[user]
+	email = lightningralf@proton.me
+	name = Ralf Terester
