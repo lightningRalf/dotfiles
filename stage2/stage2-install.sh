@@ -48,7 +48,7 @@ verify_prerequisites() {
     local required_configs=(
         "configs/nushell/config.nu"
         "configs/nushell/env.nu"
-        "configs/starship.toml"
+        "configs/starship/starship.toml"
         "configs/atuin/config.toml"
     )
     
