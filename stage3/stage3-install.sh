@@ -119,7 +119,7 @@ install_file_tools() {
     # bat - Better cat
     case "$PKG_MANAGER" in
         apt|brew|pkg)
-            pkg_install bat
+            pkg_install batcat
             ;;
         *)
             install_from_cargo "bat"
@@ -272,7 +272,7 @@ setup_shell_integration() {
             cat >> "$nu_config" << 'EOF'
 
 # Stage 3 CLI Tools Integration
-alias cat = bat
+alias bat = batcat
 alias find = fd
 alias ls = eza
 alias ll = eza -la
@@ -305,7 +305,7 @@ verify_installation() {
     log_stage "Verifying Installation"
     
     local tools=(
-        "bat:bat"
+        "batcat:bat"
         "fd:fd"
         "eza:eza"
         "rg:ripgrep"
