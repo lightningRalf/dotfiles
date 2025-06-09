@@ -1,5 +1,5 @@
-# Nushell Configuration - Corrected for Parse-Time Constraints
-# Philosophy: Minimal configuration with proper constraint handling
+# Nushell Configuration - Final Correction
+# This version correctly scopes variables for parse-time analysis.
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # Core Configuration
@@ -46,23 +46,22 @@ $env.config.keybindings = [
 # Script Loading
 # ═══════════════════════════════════════════════════════════════════════════════
 
-# Note: To source files with dynamic paths, wrap the variable in parentheses.
-# This tells Nushell to evaluate the path at runtime.
-
+# Define script path variables at the top level so the parser recognizes them.
 let scripts_dir = $"($env.HOME)/.config/nushell/scripts"
-
-# Check and source specific known scripts using the correct runtime syntax
 let aliases_file = $"($scripts_dir)/aliases.nu"
+let functions_file = $"($scripts_dir)/functions.nu"
+let completions_file = $"($scripts_dir)/completions.nu"
+
+# At runtime, check for each file's existence and source it if present.
+# The parser allows this because the variables are known at parse-time.
 if ($aliases_file | path exists) {
     source ($aliases_file)
 }
 
-let functions__file = $"($scripts_dir)/functions.nu"
 if ($functions_file | path exists) {
     source ($functions_file)
 }
 
-let completions_file = $"($scripts_dir)/completions.nu"
 if ($completions_file | path exists) {
     source ($completions_file)
 }
