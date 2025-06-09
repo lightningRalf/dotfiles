@@ -1,5 +1,5 @@
-# Nushell Configuration - Corrected for Parse-Time Constraints
-# Philosophy: Minimal configuration with proper constraint handling
+# Nushell Configuration - Minimal Parse-Time Compliant
+# All paths are literals, no dynamic loading attempts
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # Core Configuration
@@ -29,7 +29,7 @@ $env.config = {
 }
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# Keybindings
+# Keybindings - Minimal Set
 # ═══════════════════════════════════════════════════════════════════════════════
 
 $env.config.keybindings = [
@@ -43,28 +43,18 @@ $env.config.keybindings = [
 ]
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# Script Loading
+# Optional Script Loading
 # ═══════════════════════════════════════════════════════════════════════════════
 
-# Note: Due to Nushell's parse-time constraints, dynamic script loading
-# requires explicit source statements rather than iteration.
-# 
-# To load custom scripts, add explicit source commands here:
-# source ~/.config/nushell/scripts/custom.nu
-#
-# Or use the following pattern for a known set of scripts:
+# Create scripts directory if needed
+mkdir ~/.config/nushell/scripts
 
-let scripts_dir = $"($env.HOME)/.config/nushell/scripts"
+# Note: To load custom scripts, create them first, then uncomment these lines:
+# source ~/.config/nushell/scripts/aliases.nu
+# source ~/.config/nushell/scripts/functions.nu
+# source ~/.config/nushell/scripts/completions.nu
 
-# Check and source specific known scripts (not dynamic)
-if ($"($scripts_dir)/aliases.nu" | path exists) {
-    source ~/.config/nushell/scripts/aliases.nu
-}
-
-if ($"($scripts_dir)/functions.nu" | path exists) {
-    source ~/.config/nushell/scripts/functions.nu
-}
-
-if ($"($scripts_dir)/completions.nu" | path exists) {
-    source ~/.config/nushell/scripts/completions.nu
-}
+# For now, we'll include minimal aliases directly here:
+alias ll = ls -la
+alias la = ls -a
+alias l = ls -l
