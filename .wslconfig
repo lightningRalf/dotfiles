@@ -1,0 +1,17 @@
+[wsl2]
+# Resource Management
+memory=16GB                    # Adjust based on system RAM
+processors=4                  # CPU cores allocation
+swap=8GB                     # Swap file size
+swapFile=%USERPROFILE%\\AppData\\Local\\Temp\\swap.vhdx
+
+# Networking (Windows 11 22H2+ required)
+networkingMode=mirrored      # Revolutionary networking mode
+dnsTunneling=true            # Improved DNS resolution
+firewall=true                # Windows firewall integration
+autoProxy=true               # Use Windows proxy settings
+
+# Performance Optimizations
+# [experimental]
+# autoMemoryReclaim=gradual    # Automatic memory release
+# sparseVhd=true              # Automatic disk space reclaim

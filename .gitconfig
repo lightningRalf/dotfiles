@@ -1,0 +1,168 @@
+# ~/.gitconfig
+# Universal git configuration with platform-specific sections
+
+[safe]
+	directory = C:/Users/mjpa/ProgrammierProjekte/CrawlGitHub
+	directory = %(prefix)///wsl.localhost/Ubuntu-24.04/home/lightningralf/.config
+[user]
+	email = lightningralf@proton.me
+	name = lightningRalf
+
+[core]
+    editor = hx
+    pager = delta
+    excludesfile = ~/.config/git/ignore
+    # Platform-specific line ending handling
+    # Git will detect and use the right setting
+    autocrlf = true
+
+[init]
+    defaultBranch = main
+
+[pull]
+    rebase = false
+
+[push]
+    default = current
+    autoSetupRemote = true
+
+[fetch]
+    prune = true
+
+[diff]
+    colorMoved = default
+    tool = vimdiff
+
+[interactive]
+    diffFilter = delta --color-only
+
+[lfs]
+	concurrenttransfers = 3
+	tlstimeout = 30
+	dialtimeout = 30
+	activitytimeout = 120
+
+[merge]
+    conflictstyle = diff3
+    tool = vimdiff
+
+[rebase]
+    autoStash = true
+
+[delta]
+    navigate = true
+    light = false
+    side-by-side = true
+    line-numbers = true
+
+[alias]
+	who = blame
+
+    # Status/Info
+    s = status -sb
+    st = status
+    
+    # Adding/Staging
+    a = add
+    aa = add --all
+    ap = add --patch
+    
+    # Committing
+    c = commit
+    cm = commit -m
+    ca = commit --amend
+    can = commit --amend --no-edit
+    
+    # Branching
+    b = branch
+    ba = branch -a
+    bd = branch -d
+    bD = branch -D
+    co = checkout
+    cob = checkout -b
+    
+    # Diffing
+    d = diff
+    dc = diff --cached
+    ds = diff --stat
+    
+    # Logging
+    recent = for-each-ref --count=10 --sort=-committerdate refs/heads/ --format="%(refname:short)"
+	overview = log --all --since='2 weeks' --oneline --no-merges
+	today = log --since='midnight' --all --no-merges --oneline --author=lightningralf@skiff.com
+	yesterday = log --since='yesterday.midnight' --until='midnight' --all --no-merges --oneline --author=lightningralf@skiff.com
+	graph = log --graph --all --decorate --stat --date=iso
+	
+    # Remote
+    f = fetch
+    fa = fetch --all
+    p = push
+    pl = pull
+    
+    # Stashing
+    ss = stash save
+    sp = stash pop
+    sl = stash list
+    
+    # Utilities
+    unstage = reset HEAD --
+    uncommit = reset --soft HEAD~1
+    recommit = commit --amend --no-edit
+    sync = !git fetch --all && git rebase origin/main
+    cleanup = !git branch --merged | grep -v '\\*\\|main\\|master\\|develop' | xargs -n 1 git branch -d
+    
+    # Show files changed in last commit
+    changed = show --pretty="" --name-only
+    
+    # Quick look at recent work
+    recent = log --oneline -10
+    today = log --since=midnight --oneline
+    
+    # Find branches containing commit
+    fb = "!f() { git branch -a --contains $1; }; f"
+    
+    # Find commits by message
+    fm = "!f() { git log --oneline --grep=$1; }; f"
+
+# Platform-specific credential handling
+[credential]
+    # Git will use the appropriate helper for each platform
+    helper = 
+    helper = !/usr/bin credential-manager
+    helper = !"`sh -c 'if command -v git-credential-manager >/dev/null 2>&1; then echo manager; elif command -v git-credential-libsecret >/dev/null 2>&1; then echo libsecret; elif [ \"$(uname)\" = \"Darwin\" ]; then echo osxkeychain; elif [ -n \"$WINDIR\" ]; then echo wincred; else echo store; fi'`"
+
+# Conditional includes for work/personal configs
+[includeIf "gitdir:~/work/"]
+    path = ~/.gitconfig.work
+
+[includeIf "gitdir:~/personal/"]  
+    path = ~/.gitconfig.personal
+
+# URL shortcuts
+[url "git@github.com:"]
+    insteadOf = gh:
+    pushInsteadOf = https://github.com/
+
+[url "git@gitlab.com:"]
+    insteadOf = gl:
+    pushInsteadOf = https://gitlab.com/
+
+# Colors
+[color]
+    ui = auto
+    
+[color "branch"]
+    current = yellow reverse
+    local = yellow
+    remote = green
+
+[color "diff"]
+    meta = yellow bold
+    frag = magenta bold
+    old = red bold
+    new = green bold
+
+[color "status"]
+    added = green
+    changed = yellow
+    untracked = cyan
