@@ -1,0 +1,44 @@
+[
+  {
+    "content": "Integrate debug suite into the application",
+    "status": "completed",
+    "priority": "high",
+    "id": "7"
+  },
+  {
+    "content": "Create tests for remaining backend routes (progress, dependencies, users, processCompetencies)",
+    "status": "completed",
+    "priority": "high",
+    "id": "8"
+  },
+  {
+    "content": "Add debug integration to frontend app initialization",
+    "status": "completed",
+    "priority": "medium",
+    "id": "9"
+  },
+  {
+    "content": "Create test fixtures for E2E tests",
+    "status": "completed",
+    "priority": "low",
+    "id": "10"
+  },
+  {
+    "content": "Create working test suite that bypasses better-sqlite3 Node.js v24 incompatibility",
+    "status": "completed",
+    "priority": "high",
+    "id": "11"
+  },
+  {
+    "content": "Document Node.js version compatibility issue and workarounds",
+    "status": "completed",
+    "priority": "medium",
+    "id": "12"
+  },
+  {
+    "content": "Set up mise configuration for Node.js version management",
+    "status": "completed",
+    "priority": "high",
+    "id": "13"
+  }
+]

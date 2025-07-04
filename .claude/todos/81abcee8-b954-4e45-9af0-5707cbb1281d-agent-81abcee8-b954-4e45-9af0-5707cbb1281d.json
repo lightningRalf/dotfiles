@@ -1,0 +1,26 @@
+[
+  {
+    "content": "Analyze refactoring agent prompt structure and identify optimization opportunities",
+    "status": "completed",
+    "priority": "high",
+    "id": "1"
+  },
+  {
+    "content": "Design SuperClaude command integration for refactoring workflow",
+    "status": "completed",
+    "priority": "high",
+    "id": "2"
+  },
+  {
+    "content": "Create modular YAML structure for refactoring patterns",
+    "status": "completed",
+    "priority": "medium",
+    "id": "3"
+  },
+  {
+    "content": "Develop example implementation with personas and flags",
+    "status": "completed",
+    "priority": "medium",
+    "id": "4"
+  }
+]

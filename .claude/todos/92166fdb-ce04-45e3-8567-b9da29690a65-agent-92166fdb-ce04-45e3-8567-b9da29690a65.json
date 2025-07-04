@@ -1,0 +1,32 @@
+[
+  {
+    "content": "Analyze codebase structure and identify optimization opportunities",
+    "status": "in_progress",
+    "priority": "high",
+    "id": "todo-1"
+  },
+  {
+    "content": "Check for duplicate code and redundant patterns",
+    "status": "pending",
+    "priority": "high",
+    "id": "todo-2"
+  },
+  {
+    "content": "Optimize file organization and imports",
+    "status": "pending",
+    "priority": "medium",
+    "id": "todo-3"
+  },
+  {
+    "content": "Review and optimize YAML includes in CLAUDE.md",
+    "status": "pending",
+    "priority": "medium",
+    "id": "todo-4"
+  },
+  {
+    "content": "Identify performance bottlenecks in scripts",
+    "status": "pending",
+    "priority": "high",
+    "id": "todo-5"
+  }
+]

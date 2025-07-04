@@ -1,0 +1,32 @@
+[
+  {
+    "content": "Analyze current env.nu for performance bottlenecks",
+    "status": "completed",
+    "priority": "high",
+    "id": "1"
+  },
+  {
+    "content": "Fix zoxide regenerating config on every startup",
+    "status": "in_progress",
+    "priority": "high",
+    "id": "2"
+  },
+  {
+    "content": "Optimize SSH agent initialization to reduce output",
+    "status": "pending",
+    "priority": "high",
+    "id": "3"
+  },
+  {
+    "content": "Review and optimize Starship initialization",
+    "status": "pending",
+    "priority": "medium",
+    "id": "4"
+  },
+  {
+    "content": "Test optimized configuration for performance",
+    "status": "pending",
+    "priority": "high",
+    "id": "5"
+  }
+]

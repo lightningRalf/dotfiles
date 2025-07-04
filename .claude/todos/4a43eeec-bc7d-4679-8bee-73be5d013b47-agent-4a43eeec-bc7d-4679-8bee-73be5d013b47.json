@@ -1,0 +1,50 @@
+[
+  {
+    "content": "Create project structure and setup Python environment",
+    "status": "pending",
+    "priority": "high",
+    "id": "1"
+  },
+  {
+    "content": "Implement URL analysis module (domain inspection, URL shorteners, suspicious patterns)",
+    "status": "pending",
+    "priority": "high",
+    "id": "2"
+  },
+  {
+    "content": "Create email header analysis module (SPF, DKIM, suspicious routing)",
+    "status": "pending",
+    "priority": "high",
+    "id": "3"
+  },
+  {
+    "content": "Build content analysis module (phishing keywords, urgency indicators, grammar)",
+    "status": "pending",
+    "priority": "high",
+    "id": "4"
+  },
+  {
+    "content": "Implement reputation checking (domain age, blacklists, SSL certificates)",
+    "status": "pending",
+    "priority": "medium",
+    "id": "5"
+  },
+  {
+    "content": "Create main detection engine and scoring system",
+    "status": "pending",
+    "priority": "high",
+    "id": "6"
+  },
+  {
+    "content": "Add CLI interface and reporting functionality",
+    "status": "pending",
+    "priority": "medium",
+    "id": "7"
+  },
+  {
+    "content": "Write tests and documentation",
+    "status": "pending",
+    "priority": "medium",
+    "id": "8"
+  }
+]

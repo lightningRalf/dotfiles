@@ -1,0 +1,26 @@
+[
+  {
+    "content": "Analyze CLAUDE.md structure and @include references",
+    "status": "in_progress",
+    "priority": "high",
+    "id": "1"
+  },
+  {
+    "content": "Check for missing include files referenced in CLAUDE.md",
+    "status": "pending",
+    "priority": "high",
+    "id": "2"
+  },
+  {
+    "content": "Verify install.sh functionality and recent changes",
+    "status": "pending",
+    "priority": "medium",
+    "id": "3"
+  },
+  {
+    "content": "Review overall SuperClaude configuration integrity",
+    "status": "pending",
+    "priority": "medium",
+    "id": "4"
+  }
+]

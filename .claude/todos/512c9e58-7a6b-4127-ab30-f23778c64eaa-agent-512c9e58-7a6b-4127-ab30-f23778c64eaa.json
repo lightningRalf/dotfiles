@@ -1,0 +1,20 @@
+[
+  {
+    "content": "Perform comprehensive codebase analysis for refactoring opportunities",
+    "status": "in_progress",
+    "priority": "high",
+    "id": "refactor-1"
+  },
+  {
+    "content": "Identify code smells based on configured thresholds",
+    "status": "pending",
+    "priority": "high",
+    "id": "refactor-2"
+  },
+  {
+    "content": "Generate refactoring recommendations with priority scoring",
+    "status": "pending",
+    "priority": "medium",
+    "id": "refactor-3"
+  }
+]

@@ -1,0 +1,44 @@
+[
+  {
+    "content": "Create founding agent specifications and prompt templates",
+    "status": "completed",
+    "priority": "high",
+    "id": "1"
+  },
+  {
+    "content": "Implement communication protocol between agents",
+    "status": "completed",
+    "priority": "high",
+    "id": "2"
+  },
+  {
+    "content": "Build persistence layer for agent memory and knowledge sharing",
+    "status": "completed",
+    "priority": "high",
+    "id": "3"
+  },
+  {
+    "content": "Create bootstrap initialization script",
+    "status": "completed",
+    "priority": "medium",
+    "id": "4"
+  },
+  {
+    "content": "Design first autonomous cell architecture",
+    "status": "pending",
+    "priority": "medium",
+    "id": "5"
+  },
+  {
+    "content": "Implement agent orchestration system",
+    "status": "pending",
+    "priority": "medium",
+    "id": "6"
+  },
+  {
+    "content": "Create testing framework for AI Society validation",
+    "status": "pending",
+    "priority": "low",
+    "id": "7"
+  }
+]

@@ -1,0 +1,26 @@
+[
+  {
+    "content": "Analyze install.sh to understand main installation flow",
+    "status": "completed",
+    "priority": "high",
+    "id": "analyze-install-script"
+  },
+  {
+    "content": "Check README for installation instructions",
+    "status": "completed",
+    "priority": "medium",
+    "id": "check-readme"
+  },
+  {
+    "content": "Identify installation dependencies and requirements",
+    "status": "completed",
+    "priority": "medium",
+    "id": "analyze-dependencies"
+  },
+  {
+    "content": "Create mermaid diagram visualizing installation flows",
+    "status": "completed",
+    "priority": "high",
+    "id": "create-mermaid"
+  }
+]
