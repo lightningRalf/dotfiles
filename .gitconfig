@@ -20,14 +20,21 @@
   gpgsign = true
 
 [core]
-    editor = hx
+    editor = micro
     pager = delta
     excludesfile = ~/.config/git/ignore
     # Platform-specific line ending handling
     # Git will detect and use the right setting
-    autocrlf = true
-    sshCommand = C:/Windows/System32/OpenSSH/ssh.exe
-    
+    autocrlf = input
+
+[includeIf "env:GIT_SSH_OS=wsl"]
+    path = ~/.gitconfig-wsl
+[includeIf "env:GIT_SSH_OS=gitbash"]
+    path = ~/.gitconfig-gitbash
+[includeIf "env:GIT_SSH_OS=windows"]
+    path = ~/.gitconfig-windows
+
+
 [init]
     defaultBranch = main
 
@@ -69,7 +76,7 @@
 [delta]
     # Core Features
     navigate = true                   # Enable n/N navigation between files
-    light = false                     # Dark terminal theme
+    light = true                     # Dark terminal theme
     side-by-side = true              # Show diffs side-by-side
     line-numbers = true              # Display line numbers
     
@@ -99,6 +106,7 @@
     a = add
     aa = add --all
     ap = add --patch
+    au = add -u
     
     # Committing
     c = commit

@@ -1,3 +1,14 @@
+# Detect environment and set GIT_SSH_OS accordingly
+
+if grep -qEi "(Microsoft|WSL)" /proc/version 2>/dev/null; then
+    export GIT_SSH_OS="wsl"
+elif [ -n "$MSYSTEM" ]; then
+    # Git Bash provides $MSYSTEM (like MINGW64, etc.)
+    export GIT_SSH_OS="gitbash"
+else
+    export GIT_SSH_OS="windows"
+fi
+
 export PATH="$HOME/.local/bin:$PATH"
 
 # bun
@@ -61,4 +72,3 @@ cdfd() {
 
 
 alias claude="/home/lightningralf/.claude/local/claude"
-
