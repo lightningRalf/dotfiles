@@ -55,7 +55,7 @@ fi
 
 
 # Aliases for batcat (enhanced cat)
-alias cat='batcat'
+alias bat='batcat'
 alias bat='bat --style=numbers,changes,header'
 alias batl='bat --style=plain'
 alias batd='bat --theme="Dracula"'

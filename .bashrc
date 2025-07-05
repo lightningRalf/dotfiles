@@ -1,9 +1,12 @@
 export PATH="$HOME/.local/bin:$PATH"
 
-
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
+
+if [ -n "$XDG_RUNTIME_DIR" ]; then
+    chmod 0700 "$XDG_RUNTIME_DIR"
+fi
 
 command -v starship &> /dev/null && eval "$(starship init bash)"
 command -v zoxide &> /dev/null && eval "$(zoxide init bash)"
@@ -49,10 +52,13 @@ HISTSIZE=1000
 HISTFILESIZE=2000
 
 cdfd() {
-  cd "$(fd --color=never -t d "$1" | fzf)"
+  local dir
+  dir="$(fd --color=never -t d "$1" | fzf)"
+  if [[ -n "$dir" ]]; then
+    cd "$dir"
+  fi
 }
 
 
-
-
 alias claude="/home/lightningralf/.claude/local/claude"
+
