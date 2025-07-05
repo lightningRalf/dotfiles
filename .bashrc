@@ -11,6 +11,7 @@ command -v atuin &> /dev/null && eval "$(atuin init bash --disable-up-arrow)"
 command -v mise &> /dev/null && eval "$(mise activate bash)"
 command -v op &> /dev/null && eval "$(op completion bash)"
 
+source <(op completion bash)
 source ~/.config/fzf/functions.sh
 # export HELIX_RUNTIME=/usr/local/share/helix/runtime
 source /home/lightningralf/.op/plugins.sh
