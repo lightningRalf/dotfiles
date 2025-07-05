@@ -15,7 +15,8 @@
     # Platform-specific line ending handling
     # Git will detect and use the right setting
     autocrlf = true
-
+    sshCommand = C:/Windows/System32/OpenSSH/ssh.exe
+    
 [init]
     defaultBranch = main
 
@@ -32,9 +33,14 @@
 [diff]
     colorMoved = default
     tool = vimdiff
+	algorithm = histogram
 
 [interactive]
     diffFilter = delta --color-only
+
+[add.interactive]
+	# Use delta for staging patches
+	useBuiltin = false
 
 [lfs]
 	concurrenttransfers = 3
@@ -50,10 +56,26 @@
     autoStash = true
 
 [delta]
-    navigate = true
-    light = false
-    side-by-side = true
-    line-numbers = true
+    # Core Features
+    navigate = true                   # Enable n/N navigation between files
+    light = false                     # Dark terminal theme
+    side-by-side = true              # Show diffs side-by-side
+    line-numbers = true              # Display line numbers
+    
+    # Visual Enhancements
+    syntax-theme = base16            # Consistent with bat theme
+    plus-style = "syntax #2E7D32"    # Green for additions
+    minus-style = "syntax #D32F2F"   # Red for deletions
+    
+    # UI Configuration
+    file-style = bold yellow ul      # Highlight file names
+    file-decoration-style = none
+    hunk-header-style = file line-number syntax
+    hunk-header-decoration-style = blue box
+    
+    # Performance Optimizations
+    max-line-length = 512            # Prevent performance issues
+    tabs = 4                         # Consistent with editor settings
 
 [alias]
 	who = blame
@@ -85,6 +107,8 @@
     d = diff
     dc = diff --cached
     ds = diff --stat
+	diffs = diff --staged
+	diffh = diff HEAD
     
     # Logging
     recent = for-each-ref --count=10 --sort=-committerdate refs/heads/ --format="%(refname:short)"
@@ -92,7 +116,8 @@
 	today = log --since='midnight' --all --no-merges --oneline --author=lightningralf@skiff.com
 	yesterday = log --since='yesterday.midnight' --until='midnight' --all --no-merges --oneline --author=lightningralf@skiff.com
 	graph = log --graph --all --decorate --stat --date=iso
-	
+	visual-log = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+
     # Remote
     f = fetch
     fa = fetch --all
@@ -105,6 +130,7 @@
     sl = stash list
     
     # Utilities
+	interactive = add --interactive
     unstage = reset HEAD --
     uncommit = reset --soft HEAD~1
     recommit = commit --amend --no-edit
@@ -113,6 +139,7 @@
     
     # Show files changed in last commit
     changed = show --pretty="" --name-only
+	changes = diff --name-status
     
     # Quick look at recent work
     recent = log --oneline -10

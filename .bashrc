@@ -2,6 +2,7 @@ command -v starship &> /dev/null && eval "$(starship init bash)"
 command -v zoxide &> /dev/null && eval "$(zoxide init bash)"
 command -v atuin &> /dev/null && eval "$(atuin init bash --disable-up-arrow)"
 
+source <(op completion bash)
 source ~/.config/fzf/functions.sh
 # export HELIX_RUNTIME=/usr/local/share/helix/runtime
 

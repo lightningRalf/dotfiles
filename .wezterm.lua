@@ -5,6 +5,8 @@ local act = wezterm.action
 -- This will hold the configuration.
 local config = wezterm.config_builder()
 
+config.color_scheme = 'Cupertino (base16)'
+
 local function create_shell_spawner(shell_path, env_name)
   return act.SpawnCommandInNewTab {
     domain = 'CurrentPaneDomain',
@@ -29,9 +31,6 @@ wezterm.on('update-right-status', function(window, pane)
   window:set_right_status(name or '')
 end)
 
-
-
-
 config.leader = { key = 'Space', mods = 'SHIFT|ALT' }
 config.keys = {
   -- CTRL+SHIFT+Space, followed by 'r' will put us in resize-pane
@@ -46,6 +45,7 @@ config.keys = {
   },
 
   -- Use standard key bindings
+  { key = 'Backspace', mods = 'CTRL', action = act.SendKey { key = 'Backspace', mods = 'ALT' } },
 
   -- Standard copy/paste
   { key = 'c', mods = 'CTRL|SHIFT', action = act.CopyTo 'Clipboard' },
