@@ -137,7 +137,6 @@
 
 # Platform-specific credential handling
 [credential]
-    helper = !op-credential-helper
     
 # Conditional includes for work/personal configs
 [includeIf "gitdir:~/work/"]

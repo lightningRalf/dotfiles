@@ -29,9 +29,6 @@ wezterm.on('update-right-status', function(window, pane)
   window:set_right_status(name or '')
 end)
 
-
-
-
 config.leader = { key = 'Space', mods = 'SHIFT|ALT' }
 config.keys = {
   -- CTRL+SHIFT+Space, followed by 'r' will put us in resize-pane
@@ -46,14 +43,14 @@ config.keys = {
   },
 
   -- Use standard key bindings
-
+  
   -- Standard copy/paste
   { key = 'c', mods = 'CTRL|SHIFT', action = act.CopyTo 'Clipboard' },
   { key = 'v', mods = 'CTRL|SHIFT', action = act.PasteFrom 'Clipboard' },
 
   -- Standard tab management
   { key = 't', mods = 'CTRL', action = act.SpawnTab 'CurrentPaneDomain' },
-  { key = 'w', mods = 'CTRL', action = act.CloseCurrentTab{ confirm = true } },
+  { key = 'b', mods = 'CTRL', action = act.CloseCurrentTab{ confirm = true } },
   { key = 'w', mods = 'CTRL|SHIFT', action = act.CloseCurrentPane{ confirm = false } },
   { key = 'Tab', mods = 'CTRL', action = act.ActivateTabRelative(1) },
   { key = 'Tab', mods = 'CTRL|SHIFT', action = act.ActivateTabRelative(-1) },
@@ -65,7 +62,6 @@ config.keys = {
   { key = 'n', mods = 'SHIFT|ALT', action = create_shell_spawner('nu.exe', 'Nushell') },
   { key = 'g', mods = 'SHIFT|ALT', action = create_shell_spawner('C:\\Program Files\\Git\\bin\\bash.exe', 'GitBash') },
 
-
   -- tab navigation
   { key = 'LeftArrow', mods = 'SHIFT|ALT', action = act.ActivatePaneDirection 'Left' },
   { key = 's', mods = 'SHIFT|ALT', action = act.ActivatePaneDirection 'Left' },
@@ -75,7 +71,7 @@ config.keys = {
 
   { key = 'UpArrow', mods = 'SHIFT|ALT', action = act.ActivatePaneDirection 'Up' },
   { key = 'e', mods = 'SHIFT|ALT', action = act.ActivatePaneDirection 'Up' },
-
+  
   { key = 'DownArrow', mods = 'SHIFT|ALT', action = act.ActivatePaneDirection 'Down' },
   { key = 'd', mods = 'SHIFT|ALT', action = act.ActivatePaneDirection 'Down' },
 

@@ -25,15 +25,15 @@ alias rgs='rg --case-sensitive'              # Force case sensitive
 # alias rgfzf='rg --files | fzf --preview "bat --style=numbers --line-range :500 {}"' - does not work / get voila 2025-06-24 and claude
 
 # Aliases for fd (fd-find)
-alias fd='fd --color=always'
+alias fd='fdfind --color=always'
 alias fda='fd --no-ignore --hidden'
 alias fdt='fd --type f'
-alias fdd='fd --type d'
+alias fdd='fd --type d | fzf | cd'
 alias fdjs='fd --extension js'
 alias fdexec='fd --type f --exec'
 # Aliases for fd + fzf for file selection
-# alias ff='fd --type f | fzf --preview "bat --style=numbers --color=always --line-range :500 {}"'
-# alias fdd='fd --type d | fzf | cd'
+alias ff='fd --type f | fzf --preview "bat --style=numbers --color=always --line-range :500 {}"'
+
 
 # Aliases for eza (ls replacement)
 alias ls='eza --color=always --group-directories-first --icons'
