@@ -1,0 +1,26 @@
+[
+  {
+    "content": "Investigate Claude Code executable path issue",
+    "status": "completed",
+    "priority": "high",
+    "id": "1"
+  },
+  {
+    "content": "Check if Claude Code is installed",
+    "status": "completed",
+    "priority": "high",
+    "id": "2"
+  },
+  {
+    "content": "Fix the executable path configuration",
+    "status": "in_progress",
+    "priority": "high",
+    "id": "3"
+  },
+  {
+    "content": "Update tests to cover this scenario",
+    "status": "pending",
+    "priority": "medium",
+    "id": "4"
+  }
+]

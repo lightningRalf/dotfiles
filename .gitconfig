@@ -4,9 +4,20 @@
 [safe]
 	directory = C:/Users/mjpa/ProgrammierProjekte/CrawlGitHub
 	directory = %(prefix)///wsl.localhost/Ubuntu-24.04/home/lightningralf/.config
+
 [user]
-	email = lightningralf@proton.me
+  signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAFUsbgmeh8V7OWRIoddDl7RwbJCK/+GUeyuDrVwwjAt
+	email = lightningRalf@proton.me
 	name = lightningRalf
+
+[gpg]
+  format = ssh
+
+[gpg "ssh"]
+  program = "/opt/1Password/op-ssh-sign"
+
+[commit]
+  gpgsign = true
 
 [core]
     editor = hx
@@ -153,11 +164,8 @@
 
 # Platform-specific credential handling
 [credential]
-    # Git will use the appropriate helper for each platform
-    helper = 
-    helper = !/usr/bin credential-manager
-    helper = !"`sh -c 'if command -v git-credential-manager >/dev/null 2>&1; then echo manager; elif command -v git-credential-libsecret >/dev/null 2>&1; then echo libsecret; elif [ \"$(uname)\" = \"Darwin\" ]; then echo osxkeychain; elif [ -n \"$WINDIR\" ]; then echo wincred; else echo store; fi'`"
-
+    helper = !op-credential-helper
+    
 # Conditional includes for work/personal configs
 [includeIf "gitdir:~/work/"]
     path = ~/.gitconfig.work

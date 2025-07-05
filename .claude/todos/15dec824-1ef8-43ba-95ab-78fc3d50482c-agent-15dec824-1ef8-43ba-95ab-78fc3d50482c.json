@@ -1,0 +1,38 @@
+[
+  {
+    "content": "Integrate the backend API with the 3D visualization",
+    "status": "completed",
+    "priority": "high",
+    "id": "10"
+  },
+  {
+    "content": "Add UI for managing process competencies",
+    "status": "completed",
+    "priority": "high",
+    "id": "11"
+  },
+  {
+    "content": "Create dependency visualization",
+    "status": "pending",
+    "priority": "high",
+    "id": "12"
+  },
+  {
+    "content": "Write unit tests for API endpoints",
+    "status": "pending",
+    "priority": "medium",
+    "id": "13"
+  },
+  {
+    "content": "Create API integration tests",
+    "status": "pending",
+    "priority": "medium",
+    "id": "14"
+  },
+  {
+    "content": "Add user documentation",
+    "status": "pending",
+    "priority": "medium",
+    "id": "15"
+  }
+]

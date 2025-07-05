@@ -47,10 +47,15 @@ alias la='eza --long --all --group --group-directories-first'
 
 # Aliases for git
 alias g='git'
-alias dotfiles='/cmd/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+elif [[ "$OSTYPE" == "msys"* ]] || [[ "$OSTYPE" == "win32"* ]] || [[ "$OSTYPE" == "cygwin"* ]]; then
+    alias dotfiles='/cmd/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+fi
+
 
 # Aliases for batcat (enhanced cat)
-alias cat='bat'
+alias cat='batcat'
 alias bat='bat --style=numbers,changes,header'
 alias batl='bat --style=plain'
 alias batd='bat --theme="Dracula"'

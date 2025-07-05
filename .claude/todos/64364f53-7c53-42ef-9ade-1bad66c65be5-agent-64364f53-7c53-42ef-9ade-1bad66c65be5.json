@@ -1,0 +1,20 @@
+[
+  {
+    "content": "Draft GitHub issue for SuperClaude refactoring needs",
+    "status": "in_progress",
+    "priority": "high",
+    "id": "draft-github-issue"
+  },
+  {
+    "content": "Keep refactor command separate from core refactoring",
+    "status": "pending",
+    "priority": "high",
+    "id": "separate-concerns"
+  },
+  {
+    "content": "Plan how to integrate refactor command after core issues resolved",
+    "status": "pending",
+    "priority": "medium",
+    "id": "plan-integration"
+  }
+]

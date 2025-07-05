@@ -1,0 +1,26 @@
+[
+  {
+    "content": "Analyze SuperClaude file structure and architecture",
+    "status": "completed",
+    "priority": "high",
+    "id": "analyze-structure"
+  },
+  {
+    "content": "Create detailed GitHub issue for install.sh refactoring",
+    "status": "completed",
+    "priority": "high",
+    "id": "create-install-issue"
+  },
+  {
+    "content": "Create detailed GitHub issue for CLAUDE.md refactoring",
+    "status": "completed",
+    "priority": "high",
+    "id": "create-claude-md-issue"
+  },
+  {
+    "content": "Create detailed GitHub issue for COMMANDS.md refactoring",
+    "status": "completed",
+    "priority": "high",
+    "id": "create-commands-md-issue"
+  }
+]

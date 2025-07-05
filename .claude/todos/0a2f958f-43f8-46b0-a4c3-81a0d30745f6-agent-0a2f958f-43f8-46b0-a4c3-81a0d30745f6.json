@@ -1,0 +1,8 @@
+[
+  {
+    "content": "Update implementation-plan.md to use dotfiles git instead of separate repo",
+    "status": "completed",
+    "priority": "high",
+    "id": "fix-1"
+  }
+]

@@ -1,0 +1,56 @@
+[
+  {
+    "content": "Analyze JSON parsing error in drizzle-orm during tests",
+    "status": "completed",
+    "priority": "high",
+    "id": "1"
+  },
+  {
+    "content": "Check database schema for JSON columns",
+    "status": "completed",
+    "priority": "high",
+    "id": "2"
+  },
+  {
+    "content": "Review test database setup and initialization",
+    "status": "completed",
+    "priority": "high",
+    "id": "3"
+  },
+  {
+    "content": "Identify root cause of undefined JSON values",
+    "status": "completed",
+    "priority": "high",
+    "id": "4"
+  },
+  {
+    "content": "Implement fix for test database JSON handling",
+    "status": "completed",
+    "priority": "high",
+    "id": "5"
+  },
+  {
+    "content": "Run tests to verify fix",
+    "status": "completed",
+    "priority": "high",
+    "id": "6"
+  },
+  {
+    "content": "Research Drizzle ORM JSON handling in SQLite",
+    "status": "completed",
+    "priority": "high",
+    "id": "7"
+  },
+  {
+    "content": "Fix Drizzle ORM join query structure",
+    "status": "completed",
+    "priority": "high",
+    "id": "8"
+  },
+  {
+    "content": "Update test setup to match Drizzle column mapping",
+    "status": "completed",
+    "priority": "high",
+    "id": "9"
+  }
+]

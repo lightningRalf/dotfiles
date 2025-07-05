@@ -1,11 +1,11 @@
 command -v starship &> /dev/null && eval "$(starship init bash)"
 command -v zoxide &> /dev/null && eval "$(zoxide init bash)"
 command -v atuin &> /dev/null && eval "$(atuin init bash --disable-up-arrow)"
+command -v mise &> /dev/null && eval "$(mise activate bash)"
 
 source <(op completion bash)
 source ~/.config/fzf/functions.sh
 # export HELIX_RUNTIME=/usr/local/share/helix/runtime
-
 
 if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
@@ -41,3 +41,13 @@ HISTFILESIZE=2000
 cdfd() {
   cd "$(fd --color=never -t d "$1" | fzf)"
 }
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+source /home/lightningralf/.op/plugins.sh
+export SSH_AUTH_SOCK=$XDG_RUNTIME_DIR/1password/agent.sock

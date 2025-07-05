@@ -1,0 +1,32 @@
+[
+  {
+    "content": "Design foundation layer: Core types, state machine, base cell class",
+    "status": "completed",
+    "priority": "high",
+    "id": "design-foundation"
+  },
+  {
+    "content": "Design sensor framework for environmental awareness",
+    "status": "completed",
+    "priority": "high",
+    "id": "design-sensors"
+  },
+  {
+    "content": "Design actuator framework for action capabilities",
+    "status": "completed",
+    "priority": "high",
+    "id": "design-actuators"
+  },
+  {
+    "content": "Design decision engine and learning system",
+    "status": "completed",
+    "priority": "high",
+    "id": "design-decision"
+  },
+  {
+    "content": "Design inter-cell collaboration protocols",
+    "status": "completed",
+    "priority": "medium",
+    "id": "design-collaboration"
+  }
+]
