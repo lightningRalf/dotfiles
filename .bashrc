@@ -90,8 +90,9 @@ if ! command -v bat &>/dev/null && command -v batcat &>/dev/null; then
   alias bat=batcat
 fi
 
-export EDITOR="hx"
-export VISUAL="hx"
+# ~/.bashrc (Git Bash) or ~/.config/nushell/env.nu (Nushell)
+export EDITOR="micro"
+export VISUAL="micro"
 export PAGER="bat --style=plain"
 export BAT_THEME="OneHalfDark"
 export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
@@ -143,8 +144,12 @@ HISTFILESIZE=2000
 ########################################################################
 [[ -f "$HOME/.bash_aliases" ]] && source "$HOME/.bash_aliases"
 
-cdfd() {               # cd to a directory chosen via fd+fzf
-  cd -- "$(fd --color=never -t d "${1:-}" | fzf)" || return
+cdfd() {
+  local dir
+  dir="$(fd --color=never -t d "$1" | fzf)"
+  if [[ -n "$dir" ]]; then
+    cd "$dir"
+  fi
 }
 
 ########################################################################

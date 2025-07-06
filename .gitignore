@@ -150,4 +150,5 @@ swap.vhdx
 !.local/bin/
 
 # Mise shims (generated)
-.local/share/mise/shims/
+.local/share/mise/shims/.claude/cache/
+.claude/*.log
