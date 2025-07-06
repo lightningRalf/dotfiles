@@ -22,14 +22,21 @@ if wezterm.target_triple == 'x86_64-pc-windows-msvc' then
   config.default_prog = {'wsl', '--cd', '~'}
 end
 
--- CLipboard
+
 if os.getenv("XDG_SESSION_TYPE") == "wayland" then
-  custom.clipboard = { copy = "wl-copy -n" }
+  config.set_clipboard = {
+    copy = { command = 'wl-copy', args = {'-n'} },
+    paste = { command = 'wl-paste', args = {} },
+  }
+elseif os.getenv("XDG_SESSION_TYPE") == "x11" then
+  config.set_clipboard = {
+    copy = { command = 'xsel', args = {'--clipboard', '--input'} },
+    paste = { command = 'xsel', args = {'--clipboard', '--output'} },
+  }
 end
 
-if os.getenv("XDG_SESSION_TYPE") == "x11" then
-  custom.clipboard = { copy = "xsel --clipboard" }
-end
+return config
+
 
 -- Show which key table is active in the status area
 wezterm.on('update-right-status', function(window, pane)
