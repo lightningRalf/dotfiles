@@ -1,0 +1,19 @@
+{
+  "lastChangelogVersion": "0.49.3",
+  "defaultProvider": "zai",
+  "defaultModel": "glm-4.6v",
+  "defaultThinkingLevel": "minimal",
+  "theme": "rose-pine-dawn",
+  "extensions": [
+    "{{ .chezmoi.homeDir }}/.pi/agent/extensions/speedreading.ts",
+    "{{ .chezmoi.homeDir }}/.pi/agent/extensions/pi-extensions/usage-extension"
+  ],
+  "showHardwareCursor": true,
+  "followUpMode": "one-at-a-time",
+  "compaction": {
+    "enabled": true,
+    "reserveTokens": 172000,
+    "keepRecentTokens": 100000
+  },
+  "hideThinkingBlock": false
+}

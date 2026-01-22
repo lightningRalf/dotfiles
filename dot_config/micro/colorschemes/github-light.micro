@@ -1,0 +1,66 @@
+# GitHub Light colorscheme for micro
+# Matches zellij github_light_inspired_zellij theme
+
+# Base colors (dark text on white bg)
+color-link default "#1f2328,#ffffff"
+color-link comment "#6a737d,#ffffff"
+
+# Strings and constants
+color-link constant "#0550ae,#ffffff"
+color-link constant.string "#0a3069,#ffffff"
+color-link constant.number "#0550ae,#ffffff"
+
+# Functions/identifiers (purple/magenta)
+color-link identifier "#8250df,#ffffff"
+
+# Keywords (red/pink)
+color-link statement "#cf222e,#ffffff"
+color-link symbol "#cf222e,#ffffff"
+
+# Preprocessor/imports (green)
+color-link preproc "#1f883d,#ffffff"
+
+# Types (orange)
+color-link type "#d26614,#ffffff"
+color-link type.extended "#953800,#ffffff"
+
+# Special
+color-link special "#aa336a,#ffffff"
+
+# Error
+color-link error "#ffffff,#cf222e"
+
+# Underlined
+color-link underlined "underline #0969da,#ffffff"
+
+# TODO comments
+color-link todo "bold #d4a72c,#ffffff"
+
+# Search highlight
+color-link hlsearch "#1f2328,#fff8c5"
+
+# UI elements
+color-link statusline "#1f2328,#f6f8fa"
+color-link tabbar "#1f2328,#f6f8fa"
+
+# Diff colors
+color-link diff-added "#1f883d"
+color-link diff-modified "#d4a72c"
+color-link diff-deleted "#cf222e"
+
+# Gutter
+color-link gutter-error "#cf222e,#ffffff"
+color-link gutter-warning "#d4a72c,#ffffff"
+color-link line-number "#8c959f,#f6f8fa"
+
+# Cursor and selection
+color-link cursor-line "#f6f8fa"
+color-link color-column "#f6f8fa"
+
+# Brackets
+color-link symbol.brackets "#1f2328,#ffffff"
+color-link match-brace "#ffffff,#1f883d"
+
+# Whitespace errors
+color-link tab-error "#ffebe9"
+color-link trailingws "#ffebe9"

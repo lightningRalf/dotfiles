@@ -1,0 +1,27 @@
+# Secrets - NEVER track
+.codex/auth.json
+.pi/agent/auth.json
+.ssh/id_*
+.ssh/known_hosts*
+.gnupg/
+
+# Session data / logs
+.codex/history.jsonl
+.codex/sessions/
+.codex/log/
+.codex/tmp/
+.codex/shell_snapshots/
+.pi/agent/sessions/
+.pi/agent/pi-crash.log
+
+# Machine-specific symlinks (WSL → Windows)
+.aws
+.azure
+.docker/
+
+# Backups
+**/*.bak*
+**/*.backup
+
+# Cache / generated
+.codex/version.json

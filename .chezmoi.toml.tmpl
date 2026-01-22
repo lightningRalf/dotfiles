@@ -1,0 +1,11 @@
+# chezmoi configuration
+# Machine-specific settings prompted on init
+
+[data]
+    email = "{{ promptString "email" }}"
+    hostname = "{{ .chezmoi.hostname }}"
+    is_wsl = {{ if (env "WSL_DISTRO_NAME") }}true{{ else }}false{{ end }}
+
+[onepassword]
+    command = "op"
+    prompt = true

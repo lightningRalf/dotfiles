@@ -1,0 +1,9 @@
+{
+    "clipboard": "terminal",
+    "colorscheme": "github-light",
+    "mkparents": true,
+    "mouse": false,
+    "tabstospaces": true,
+    "termbackup": false,
+    "xterm": true
+}

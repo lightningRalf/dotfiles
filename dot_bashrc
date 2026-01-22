@@ -1,0 +1,181 @@
+# ~/.bashrc
+# Interactive shell configuration for bash
+
+# Load essential functions and aliases (needed even in non-interactive shells)
+# This allows functions like pi-dev and aliases like ll to work in zellij, tmux, etc.
+if [ -d "$HOME/.bashrc.d" ]; then
+  for f in "$HOME/.bashrc.d"/*.bash; do
+    [ -f "$f" ] && [ -r "$f" ] && . "$f"
+  done
+fi
+
+# Source functions directory
+if [ -d "$HOME/.bashrc.d/functions" ]; then
+  for f in "$HOME/.bashrc.d/functions"/*; do
+    [ -f "$f" ] && [ -r "$f" ] && . "$f"
+  done
+fi
+
+# If not running interactively, stop here (functions/aliases already loaded)
+[[ $- != *i* ]] && return
+
+########################################################################
+#  System detection & guards (WSL, systemd)
+########################################################################
+
+# WSL / non-systemd guard - prevent systemd/dbus errors in WSL
+# This is checked once at startup and exported to all child processes
+if [[ "$(ps -p 1 -o comm= 2>/dev/null)" != "systemd" ]] || [[ ! -d /run/systemd/system ]]; then
+  export NO_SYSTEMD=1
+  # Unset DBUS address to prevent dbus/systemctl errors
+  unset DBUS_SESSION_BUS_ADDRESS
+fi
+
+# Clean PATH - remove Windows paths if in WSL
+if [[ -n "$WSL_DISTRO_NAME" ]]; then
+    # Keep only Linux paths, filter out Windows paths
+    export PATH=$(echo $PATH | tr ':' '\n' | grep -v '^/mnt/c' | grep -v '^/c/' | uniq | tr '\n' ':' | sed 's/:$//')
+fi
+
+########################################################################
+#  PATH setup
+########################################################################
+
+# Add local paths to PATH (prepend to prioritize over system paths)
+export PATH="$HOME/.amp/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/.npm-global/bin:$PATH"
+export PATH="$HOME/.bun/bin:$PATH"
+export PATH="$HOME/.atuin/bin:$PATH"
+# System paths at the end
+export PATH="/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
+
+########################################################################
+#  Editor & terminal settings
+########################################################################
+
+export EDITOR="micro"
+export TERM=xterm-256color
+export COLORTERM=truecolor
+
+# Use INPUTRC if you have one
+[ -f "$HOME/.inputrc" ] && bind -f "$HOME/.inputrc"
+
+########################################################################
+#  Tool initialization (guarded by NO_SYSTEMD where needed)
+########################################################################
+
+# Starship prompt (initialize first, before other tools that might set up preexec)
+command -v starship &>/dev/null && eval "$(starship init bash)"
+
+# Atuin - shell history enhancer (works without systemd)
+[[ -f "$HOME/.atuin/bin/env" ]] && . "$HOME/.atuin/bin/env"
+command -v atuin &>/dev/null && eval "$(atuin init bash --disable-up-arrow)"
+
+# Zoxide - smart cd replacement
+command -v zoxide &>/dev/null && eval "$(zoxide init bash)"
+
+# 1Password SSH agent socket
+if [[ -S "$HOME/.1password/agent.sock" ]]; then
+  export SSH_AUTH_SOCK="$HOME/.1password/agent.sock"
+fi
+
+########################################################################
+#  Bash history settings
+########################################################################
+
+HISTSIZE=10000
+HISTFILESIZE=20000
+HISTCONTROL=ignoredups:erasedups
+shopt -s histappend
+shopt -s checkwinsize
+
+# Sync history across sessions
+export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
+
+########################################################################
+#  Change to programming directory when starting in home
+########################################################################
+
+[[ $PWD == $HOME ]] && cd /home/lightningralf/programming
+
+########################################################################
+#  1Password CLI auto sign-in (runs without systemd dependencies)
+#  Loaded after .bashrc.d so OP_AUTO_SIGNIN variable is respected
+########################################################################
+
+[ -f "$HOME/.config/op/op-auto-signin.sh" ] && . "$HOME/.config/op/op-auto-signin.sh"
+
+########################################################################
+#  fzf configuration
+########################################################################
+
+if command -v fd &>/dev/null; then
+  export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
+else
+  export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --glob "!.git/*"'
+fi
+
+export FZF_DEFAULT_OPTS=$(
+  printf '%s' \
+    '--height 40% --layout=reverse --border ' \
+    '--preview "bat --style=numbers --color=always --line-range :500 {}" ' \
+    '--bind "ctrl-/:toggle-preview" ' \
+    '--bind "ctrl-a:select-all" '
+)
+
+if [[ -n $_COPY_CMD ]]; then
+  export FZF_DEFAULT_OPTS+="--bind \"ctrl-y:execute-silent(echo {} | $_COPY_CMD)+abort\""
+fi
+unset _COPY_CMD
+
+########################################################################
+#  Custom helper functions
+########################################################################
+
+# Quick git commit function
+gcom() {
+    if [ -z "$1" ]; then
+        echo "Usage: gcom 'commit message'"
+    else
+        git add . && git commit -m "$1"
+    fi
+}
+
+# Push to current branch
+gpush() {
+    git push origin "$(git branch --show-current)"
+}
+
+# Quick project navigation
+proj() {
+    if [ -z "$1" ]; then
+        cd ~/programming
+    else
+        cd ~/programming/"$1" 2>/dev/null || echo "Project '$1' not found"
+    fi
+}
+
+# fzf directory change with fd
+cdfd() {
+  local dir
+  dir="$(fd --color=never -t d "$1" | fzf)"
+  if [[ -n "$dir" ]]; then
+    cd "$dir"
+  fi
+}
+
+########################################################################
+#  Load additional user aliases (optional)
+########################################################################
+# Note: Functions now live in ~/.bashrc.d/functions/
+#       Aliases now live in ~/.bashrc.d/*-aliases.bash
+#       You can still use .bash_aliases for personal customizations
+
+########################################################################
+#  uv environment (persistent)
+########################################################################
+
+if [[ -f "$HOME/.local/uv-env" ]]; then
+  . "$HOME/.local/uv-env"
+fi

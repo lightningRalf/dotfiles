@@ -1,0 +1,12 @@
+# ~/.bash_profile
+# Executed by login shells
+
+# If .bashrc exists, source it first
+if [ -f "$HOME/.bashrc" ]; then
+  . "$HOME/.bashrc"
+fi
+
+# Then source .profile for login-specific setup
+if [ -f "$HOME/.profile" ]; then
+  . "$HOME/.profile"
+fi

@@ -1,0 +1,199 @@
+[init]
+	defaultBranch = main
+[core]
+    editor = micro
+    pager = delta
+    excludesfile = ~/.config/git/ignore
+    # Platform-specific line ending handling
+    # Git will detect and use the right setting
+    autocrlf = input
+
+#	sshCommand = ssh.exe
+[credential "https://github.com"]
+	helper = 
+	helper = !~/.local/bin/git-credential-op1p
+	helper = !/usr/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !~/.local/bin/git-credential-op1p
+	helper = !/usr/bin/gh auth git-credential
+
+[user]
+#  signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAFUsbgmeh8V7OWRIoddDl7RwbJCK/+GUeyuDrVwwjAt
+	email = lightningRalf@proton.me
+	name = lightningRalf
+	
+[gpg]
+  format = ssh
+
+[commit]
+#  gpgsign = true
+
+[pull]
+    rebase = false
+
+[push]
+    default = current
+    autoSetupRemote = true
+
+[fetch]
+    prune = true
+
+[diff]
+    colorMoved = default
+    tool = vimdiff
+	algorithm = histogram
+
+[interactive]
+    diffFilter = delta --color-only
+
+[add.interactive]
+	# Use delta for staging patches
+	useBuiltin = false
+
+[lfs]
+	concurrenttransfers = 3
+	tlstimeout = 30
+	dialtimeout = 30
+	activitytimeout = 120
+
+[merge]
+    conflictstyle = diff3
+    tool = vimdiff
+
+[rebase]
+    autoStash = true
+
+[delta]
+    # Core Features
+    navigate = true                   # Enable n/N navigation between files
+    light = true                     # Dark terminal theme
+    side-by-side = true              # Show diffs side-by-side
+    line-numbers = true              # Display line numbers
+    
+    # Visual Enhancements
+    syntax-theme = base16            # Consistent with bat theme
+    plus-style = "syntax #2E7D32"    # Green for additions
+    minus-style = "syntax #D32F2F"   # Red for deletions
+    
+    # UI Configuration
+    file-style = bold yellow ul      # Highlight file names
+    file-decoration-style = none
+    hunk-header-style = file line-number syntax
+    hunk-header-decoration-style = blue box
+    
+    # Performance Optimizations
+    max-line-length = 512            # Prevent performance issues
+    tabs = 4                         # Consistent with editor settings
+
+[alias]
+	who = blame
+
+    # Status/Info
+    s = status -sb
+    st = status
+    
+    # Adding/Staging
+    a = add
+    aa = add --all
+    ap = add --patch
+    au = add -u
+    
+    # Committing
+    c = commit
+    cm = commit -m
+    ca = commit --amend
+    can = commit --amend --no-edit
+    
+    # Branching
+    b = branch
+    ba = branch -a
+    bd = branch -d
+    bD = branch -D
+    co = checkout
+    cob = checkout -b
+    
+    # Diffing
+    d = diff
+    dc = diff --cached
+    ds = diff --stat
+	diffs = diff --staged
+	diffh = diff HEAD
+    
+    # Logging
+    recent = for-each-ref --count=10 --sort=-committerdate refs/heads/ --format="%(refname:short)"
+	overview = log --all --since='2 weeks' --oneline --no-merges
+	today = log --since='midnight' --all --no-merges --oneline --author=lightningralf@skiff.com
+	yesterday = log --since='yesterday.midnight' --until='midnight' --all --no-merges --oneline --author=lightningralf@skiff.com
+	graph = log --graph --all --decorate --stat --date=iso
+	visual-log = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+
+    # Remote
+    f = fetch
+    fa = fetch --all
+    p = push
+    pl = pull
+    
+    # Stashing
+    ss = stash save
+    sp = stash pop
+    sl = stash list
+    
+    # Utilities
+	interactive = add --interactive
+    unstage = reset HEAD --
+    uncommit = reset --soft HEAD~1
+    recommit = commit --amend --no-edit
+    sync = !git fetch --all && git rebase origin/main
+    cleanup = !git branch --merged | grep -v '\\*\\|main\\|master\\|develop' | xargs -n 1 git branch -d
+    
+    # Show files changed in last commit
+    changed = show --pretty="" --name-only
+	changes = diff --name-status
+    
+    # Quick look at recent work
+    recent = log --oneline -10
+    today = log --since=midnight --oneline
+    
+    # Find branches containing commit
+    fb = "!f() { git branch -a --contains $1; }; f"
+    
+    # Find commits by message
+    fm = "!f() { git log --oneline --grep=$1; }; f"
+
+    
+# Conditional includes for work/personal configs
+[includeIf "gitdir:~/work/"]
+    path = ~/.gitconfig.work
+
+[includeIf "gitdir:~/personal/"]  
+    path = ~/.gitconfig.personal
+
+# URL shortcuts
+[url "git@github.com:"]
+    insteadOf = gh:
+
+[url "git@gitlab.com:"]
+    insteadOf = gl:
+
+# Colors
+[color]
+    ui = auto
+    
+[color "branch"]
+    current = yellow reverse
+    local = yellow
+    remote = green
+
+[color "diff"]
+    meta = yellow bold
+    frag = magenta bold
+    old = red bold
+    new = green bold
+
+[color "status"]
+    added = green
+    changed = yellow
+    untracked = cyan
+[credential]
+	helper = cache --timeout=3600

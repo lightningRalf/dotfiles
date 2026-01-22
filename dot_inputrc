@@ -1,0 +1,2 @@
+"\e\177": backward-kill-word   # ESC DEL (matches \u001b\u007f)
+"\C-h": backward-kill-word     # Ctrl+H (ASCII 8)
