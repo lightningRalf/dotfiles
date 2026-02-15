@@ -1,12 +1,12 @@
 # ~/.bash_profile
-# Executed by login shells
+# Executed by bash login shells
 
-# If .bashrc exists, source it first
-if [ -f "$HOME/.bashrc" ]; then
-  . "$HOME/.bashrc"
-fi
-
-# Then source .profile for login-specific setup
+# 1) Login environment (PATH, exported vars)
 if [ -f "$HOME/.profile" ]; then
   . "$HOME/.profile"
+fi
+
+# 2) Bash interactive configuration (aliases, prompt, tooling)
+if [ -f "$HOME/.bashrc" ]; then
+  . "$HOME/.bashrc"
 fi

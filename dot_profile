@@ -4,6 +4,10 @@
 # Set PATH so it includes user's private bin directories
 export PATH="$HOME/bin:$HOME/.local/bin:$PATH"
 
+# Bun (for login shells like zellij server)
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
 # Load bashrc.d environment file
 if [ -f "$HOME/.bashrc.d/00-env.bash" ]; then
   . "$HOME/.bashrc.d/00-env.bash"
@@ -18,3 +22,4 @@ fi
 if [ -f "$HOME/.local/no-systemd.sh" ]; then
   . "$HOME/.local/no-systemd.sh"
 fi
+

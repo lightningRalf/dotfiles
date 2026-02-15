@@ -1,19 +1,121 @@
 {
-  "lastChangelogVersion": "0.49.3",
-  "defaultProvider": "zai",
-  "defaultModel": "glm-4.6v",
-  "defaultThinkingLevel": "minimal",
+  "lastChangelogVersion": "0.52.12",
+  "defaultProvider": "openai-codex",
+  "defaultModel": "gpt-5.3-codex",
+  "defaultThinkingLevel": "xhigh",
   "theme": "rose-pine-dawn",
   "extensions": [
     "{{ .chezmoi.homeDir }}/.pi/agent/extensions/speedreading.ts",
-    "{{ .chezmoi.homeDir }}/.pi/agent/extensions/pi-extensions/usage-extension"
+    "{{ .chezmoi.homeDir }}/.pi/agent/extensions/pi-extensions/usage-extension",
+    "-extensions/pi-prompt-template-model/index.ts",
+    "-extensions/powerline-footer/index.ts",
+    "-extensions/pi-extensions/usage-extension/index.ts",
+    "-extensions/speedreading.ts",
+    "+extensions/package-update-notify.ts",
+    "+extensions/secure-package-update.ts"
   ],
   "showHardwareCursor": true,
   "followUpMode": "one-at-a-time",
   "compaction": {
-    "enabled": true,
+    "enabled": false,
     "reserveTokens": 172000,
     "keepRecentTokens": 100000
   },
-  "hideThinkingBlock": false
+  "hideThinkingBlock": false,
+  "packages": [
+    {
+      "source": "npm:@marckrenn/pi-sub-bar@1.0.5",
+      "extensions": [
+        "+index.ts",
+        "+node_modules/@marckrenn/pi-sub-core/index.ts"
+      ]
+    },
+    {
+      "source": "npm:shitty-extensions@1.0.9",
+      "extensions": [
+        "-extensions/cost-tracker.ts",
+        "-extensions/flicker-corp.ts",
+        "-extensions/funny-working-message.ts",
+        "-extensions/handoff.ts",
+        "-extensions/loop.ts",
+        "-extensions/memory-mode.ts",
+        "-extensions/oracle.ts",
+        "-extensions/plan-mode.ts",
+        "-extensions/resistance.ts",
+        "-extensions/speedreading.ts",
+        "-extensions/status-widget.ts",
+        "-extensions/teletext.ts",
+        "-extensions/ultrathink.ts",
+        "-extensions/usage-bar.ts"
+      ],
+      "skills": [
+        "-skills/a-nach-b/SKILL.md"
+      ]
+    },
+    {
+      "source": "git:github.com/ferologics/pi-notify",
+      "extensions": [
+        "-index.ts"
+      ]
+    },
+    "git:github.com/gurpartap/pi-mermaid@v0.2.0",
+    {
+      "source": "git:github.com/mitsuhiko/agent-stuff@v1.2.0",
+      "extensions": [
+        "-pi-extensions/answer.ts",
+        "-pi-extensions/context.ts",
+        "-pi-extensions/control.ts",
+        "-pi-extensions/cwd-history.ts",
+        "-pi-extensions/files.ts",
+        "-pi-extensions/loop.ts",
+        "-pi-extensions/notify.ts",
+        "-pi-extensions/review.ts",
+        "-pi-extensions/todos.ts",
+        "-pi-extensions/uv.ts",
+        "-pi-extensions/whimsical.ts",
+        "+pi-extensions/session-breakdown.ts"
+      ],
+      "skills": [
+        "-skills/anachb/SKILL.md",
+        "-skills/commit/SKILL.md",
+        "+skills/frontend-design/SKILL.md",
+        "-skills/ghidra/SKILL.md",
+        "-skills/github/SKILL.md",
+        "-skills/mermaid/SKILL.md",
+        "-skills/oebb-scotty/SKILL.md",
+        "-skills/openscad/SKILL.md",
+        "-skills/pi-share/SKILL.md",
+        "-skills/sentry/SKILL.md",
+        "-skills/tmux/SKILL.md",
+        "-skills/update-changelog/SKILL.md",
+        "-skills/uv/SKILL.md",
+        "-skills/web-browser/SKILL.md"
+      ],
+      "themes": [
+        "-pi-themes/nightowl.json"
+      ]
+    },
+    "npm:pi-interview@v0.4.5"
+  ],
+  "enabledModels": [
+    "github-copilot/gemini-3-flash-preview",
+    "github-copilot/gemini-2.5-pro",
+    "github-copilot/claude-opus-4.5",
+    "github-copilot/gpt-5*-codex",
+    "google/gemini-2.5-pro*",
+    "openai-codex/gpt-5*-codex",
+    "openai-codex/gpt-5*",
+    "openrouter/openai/gpt-5*-pro",
+    "openrouter/x-ai/grok-4.1-fast",
+    "zai/glm-4*"
+  ],
+  "skills": [
+    "-skills/codemapper/SKILL.md",
+    "+skills/sop-to-command-progression/SKILL.md",
+    "+skills/sop-lifecycle-tables/SKILL.md"
+  ],
+  "prompts": [
+    "+prompts/codemap.md",
+    "+prompts/commit.md"
+  ]
 }

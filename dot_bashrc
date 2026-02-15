@@ -179,3 +179,11 @@ cdfd() {
 if [[ -f "$HOME/.local/uv-env" ]]; then
   . "$HOME/.local/uv-env"
 fi
+
+# >>> ai-society offline git push wrapper >>>
+if [ -x "/home/lightningralf/ai-society/softwareco/softwareco-templates/scripts/git-wrapper.sh" ]; then
+  git() {
+    "/home/lightningralf/ai-society/softwareco/softwareco-templates/scripts/git-wrapper.sh" "$@"
+  }
+fi
+# <<< ai-society offline git push wrapper <<<

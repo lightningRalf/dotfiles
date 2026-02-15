@@ -11,11 +11,9 @@
 #	sshCommand = ssh.exe
 [credential "https://github.com"]
 	helper = 
-	helper = !~/.local/bin/git-credential-op1p
 	helper = !/usr/bin/gh auth git-credential
 [credential "https://gist.github.com"]
 	helper = 
-	helper = !~/.local/bin/git-credential-op1p
 	helper = !/usr/bin/gh auth git-credential
 
 [user]
