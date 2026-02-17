@@ -1,10 +1,10 @@
 // Project session: rikDepdietS1
-// Repo: /home/lightningralf/programming/rik-depdiet
+// Repo: {{ .chezmoi.homeDir }}/programming/rik-depdiet
 // Tabs:
 //   1) rik-depdiet: main shell + convex self-hosted dev + depdiet artifacts monitor
 //   2) appmap: AppMap visualization tooling
 layout {
-  cwd "/home/lightningralf/programming/rik-depdiet"
+  cwd "{{ .chezmoi.homeDir }}/programming/rik-depdiet"
 
   tab name="rik-depdiet" focus=true hide_floating_panes=true {
     pane size=1 borderless=true {
@@ -13,15 +13,15 @@ layout {
 
     pane split_direction="horizontal" {
       pane name="main" size="70%" command="bash" {
-        args "-lc" "cd /home/lightningralf/programming/rik-depdiet && exec bash -l"
+        args "-lc" "cd {{ .chezmoi.homeDir }}/programming/rik-depdiet && exec bash -l"
       }
 
       pane split_direction="vertical" {
         pane name="convex self-hosted dev" command="bash" {
-          args "-lc" "cd /home/lightningralf/programming/rik-depdiet && exec ./scripts/dev/convex-selfhosted-dev.sh"
+          args "-lc" "cd {{ .chezmoi.homeDir }}/programming/rik-depdiet && exec ./scripts/dev/convex-selfhosted-dev.sh"
         }
         pane name="depdiet artifacts view" command="bash" {
-          args "-lc" "cd /home/lightningralf/programming/rik-depdiet && exec ./scripts/dev/depdiet-artifacts-view.sh"
+          args "-lc" "cd {{ .chezmoi.homeDir }}/programming/rik-depdiet && exec ./scripts/dev/depdiet-artifacts-view.sh"
         }
       }
     }
@@ -37,7 +37,7 @@ layout {
     }
 
     pane name="appmap visualizer" command="bash" {
-      args "-lc" "cd /home/lightningralf/programming/rik-depdiet && exec ./scripts/dev/appmap-visualizer.sh"
+      args "-lc" "cd {{ .chezmoi.homeDir }}/programming/rik-depdiet && exec ./scripts/dev/appmap-visualizer.sh"
     }
 
     pane size=1 borderless=true {
@@ -49,7 +49,7 @@ layout {
     pane size=1 borderless=true {
       plugin location="zellij:tab-bar"
     }
-    pane cwd="/home/lightningralf/programming/rik-depdiet"
+    pane cwd="{{ .chezmoi.homeDir }}/programming/rik-depdiet"
     pane size=1 borderless=true {
       plugin location="zellij:status-bar"
     }

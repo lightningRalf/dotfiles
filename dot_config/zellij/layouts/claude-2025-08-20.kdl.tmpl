@@ -4,8 +4,8 @@ layout {
             plugin location="zellij:tab-bar"
         }
         pane split_direction="vertical" {
-            pane name="ai-society" cwd="/home/lightningralf/ai-society"
-            pane name="ontology-lsp" cwd="/home/lightningralf/programming/ontology-lsp"
+            pane name="ai-society" cwd="{{ .chezmoi.homeDir }}/ai-society"
+            pane name="ontology-lsp" cwd="{{ .chezmoi.homeDir }}/programming/ontology-lsp"
         }
         pane size=1 borderless=true {
             plugin location="zellij:status-bar"

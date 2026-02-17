@@ -343,7 +343,7 @@ panes {
         pane_content_rows 15
         pane_columns 20
         pane_content_columns 18
-        terminal_command "node /home/lightningralf/pi-societyChatGPT1/node_modules/.bin/next dev"
+        terminal_command "node {{ .chezmoi.homeDir }}/pi-societyChatGPT1/node_modules/.bin/next dev"
         is_selectable true
         tab_position 1
     }
@@ -498,7 +498,7 @@ panes {
         pane_columns 78
         pane_content_columns 76
         cursor_coordinates_in_pane 1 30
-        terminal_command "bash -lc cd /home/lightningralf/programming/rik-depdiet && exec bash -l"
+        terminal_command "bash -lc cd {{ .chezmoi.homeDir }}/programming/rik-depdiet && exec bash -l"
         is_selectable true
         tab_position 9
     }
@@ -521,7 +521,7 @@ panes {
         pane_columns 39
         pane_content_columns 37
         cursor_coordinates_in_pane 1 15
-        terminal_command "bash -lc cd /home/lightningralf/programming/rik-depdiet && exec ./scripts/dev/depdiet-artifacts-view.sh"
+        terminal_command "bash -lc cd {{ .chezmoi.homeDir }}/programming/rik-depdiet && exec ./scripts/dev/depdiet-artifacts-view.sh"
         is_selectable true
         tab_position 9
     }
@@ -676,7 +676,7 @@ panes {
         pane_columns 78
         pane_content_columns 76
         cursor_coordinates_in_pane 1 54
-        terminal_command "bash -lc cd /home/lightningralf/programming/rik-depdiet && exec ./scripts/dev/appmap-visualizer.sh"
+        terminal_command "bash -lc cd {{ .chezmoi.homeDir }}/programming/rik-depdiet && exec ./scripts/dev/appmap-visualizer.sh"
         is_selectable true
         tab_position 10
     }

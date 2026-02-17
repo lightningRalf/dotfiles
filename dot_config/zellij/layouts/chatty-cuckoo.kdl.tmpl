@@ -1,13 +1,13 @@
 layout {
-    cwd "/home/lightningralf"
+    cwd "{{ .chezmoi.homeDir }}"
     tab name="provisioning" hide_floating_panes=true {
         pane size=1 borderless=true {
             plugin location="zellij:tab-bar"
         }
-        pane command="pi" cwd="/home/lightningralf/ops/provisioning" size="50%" {
+        pane command="pi" cwd="{{ .chezmoi.homeDir }}/ops/provisioning" size="50%" {
             start_suspended true
         }
-        pane command="/usr/lib/electron37/electron" cwd="/home/lightningralf/ops/provisioning" size="50%" {
+        pane command="/usr/lib/electron37/electron" cwd="{{ .chezmoi.homeDir }}/ops/provisioning" size="50%" {
             args "/usr/lib/obsidian/app.asar"
             start_suspended true
         }
@@ -19,15 +19,15 @@ layout {
         pane size=1 borderless=true {
             plugin location="zellij:tab-bar"
         }
-        pane command="pi" name="main" cwd="/home/lightningralf/pi-societyChatGPT1" size="70%" {
+        pane command="pi" name="main" cwd="{{ .chezmoi.homeDir }}/pi-societyChatGPT1" size="70%" {
             start_suspended true
         }
         pane size="30%" split_direction="vertical" {
-            pane command="node" name="web dev" cwd="/home/lightningralf/pi-societyChatGPT1/apps/web" size="25%" {
-                args "/home/lightningralf/pi-societyChatGPT1/node_modules/.bin/next" "dev"
+            pane command="node" name="web dev" cwd="{{ .chezmoi.homeDir }}/pi-societyChatGPT1/apps/web" size="25%" {
+                args "{{ .chezmoi.homeDir }}/pi-societyChatGPT1/node_modules/.bin/next" "dev"
                 start_suspended true
             }
-            pane command="just" cwd="/home/lightningralf/pi-societyChatGPT1/apps/web" size="75%" {
+            pane command="just" cwd="{{ .chezmoi.homeDir }}/pi-societyChatGPT1/apps/web" size="75%" {
                 args "convex"
                 start_suspended true
             }
@@ -40,10 +40,10 @@ layout {
         pane size=1 borderless=true {
             plugin location="zellij:tab-bar"
         }
-        pane command="pi" cwd="/home/lightningralf/programming/lehrplanPlus-Visualizer" size="50%" {
+        pane command="pi" cwd="{{ .chezmoi.homeDir }}/programming/lehrplanPlus-Visualizer" size="50%" {
             start_suspended true
         }
-        pane command="uv" cwd="/home/lightningralf/programming/lehrplanPlus-Visualizer" size="50%" {
+        pane command="uv" cwd="{{ .chezmoi.homeDir }}/programming/lehrplanPlus-Visualizer" size="50%" {
             args "run" "--group" "api" "granian" "--interface" "asgi" "api.main:app" "--reload"
             start_suspended true
         }
@@ -55,7 +55,7 @@ layout {
         pane size=1 borderless=true {
             plugin location="zellij:tab-bar"
         }
-        pane command="pi" cwd="/home/lightningralf/programming/zufallsrad" {
+        pane command="pi" cwd="{{ .chezmoi.homeDir }}/programming/zufallsrad" {
             start_suspended true
         }
         pane size=1 borderless=true {
@@ -66,7 +66,7 @@ layout {
         pane size=1 borderless=true {
             plugin location="zellij:tab-bar"
         }
-        pane command="pi" cwd="/home/lightningralf/programming/dspx" {
+        pane command="pi" cwd="{{ .chezmoi.homeDir }}/programming/dspx" {
             start_suspended true
         }
         pane size=1 borderless=true {
@@ -77,7 +77,7 @@ layout {
         pane size=1 borderless=true {
             plugin location="zellij:tab-bar"
         }
-        pane command="pi" cwd="/home/lightningralf/programming/pi-extensions/template" {
+        pane command="pi" cwd="{{ .chezmoi.homeDir }}/programming/pi-extensions/template" {
             start_suspended true
         }
         pane size=1 borderless=true {
@@ -88,7 +88,7 @@ layout {
         pane size=1 borderless=true {
             plugin location="zellij:tab-bar"
         }
-        pane command="pi" cwd="/home/lightningralf/programming/pi-extensions/secure-package-update" {
+        pane command="pi" cwd="{{ .chezmoi.homeDir }}/programming/pi-extensions/secure-package-update" {
             start_suspended true
         }
         pane size=1 borderless=true {
@@ -99,7 +99,7 @@ layout {
         pane size=1 borderless=true {
             plugin location="zellij:tab-bar"
         }
-        pane command="just" cwd="/home/lightningralf/programming/ralph-intent-kit" {
+        pane command="just" cwd="{{ .chezmoi.homeDir }}/programming/ralph-intent-kit" {
             args "dev"
             start_suspended true
         }
@@ -127,7 +127,7 @@ layout {
         }
         pane size="30%" split_direction="vertical" {
             pane command="node" cwd="programming/rik-depdiet" size="50%" {
-                args "/home/lightningralf/programming/rik-depdiet/node_modules/.bin/convex" "dev" "--env-file" "/home/lightningralf/programming/rik-depdiet/.env.local"
+                args "{{ .chezmoi.homeDir }}/programming/rik-depdiet/node_modules/.bin/convex" "dev" "--env-file" "{{ .chezmoi.homeDir }}/programming/rik-depdiet/.env.local"
                 start_suspended true
             }
             pane command="sleep" name="depdiet artifacts view" cwd="programming/rik-depdiet" size="50%" {
@@ -144,7 +144,7 @@ layout {
             plugin location="zellij:tab-bar"
         }
         pane command="node" name="appmap visualizer" cwd="programming/rik-depdiet" {
-            args "/home/lightningralf/programming/rik-depdiet/node_modules/.bin/appmap" "rpc" "--ui" "--port" "38999"
+            args "{{ .chezmoi.homeDir }}/programming/rik-depdiet/node_modules/.bin/appmap" "rpc" "--ui" "--port" "38999"
             start_suspended true
         }
         pane size=1 borderless=true {
@@ -177,7 +177,7 @@ layout {
         pane size=1 borderless=true {
             plugin location="zellij:tab-bar"
         }
-        pane cwd="/home/lightningralf/programming/orgmem2"
+        pane cwd="{{ .chezmoi.homeDir }}/programming/orgmem2"
         pane size=1 borderless=true {
             plugin location="zellij:status-bar"
         }
@@ -334,61 +334,61 @@ layout {
     }
     swap_floating_layout name="enlarged" {
         floating_panes max_panes=10 {
-            pane cwd="/home/lightningralf/programming/orgmem2" {
+            pane cwd="{{ .chezmoi.homeDir }}/programming/orgmem2" {
                 height "90%"
                 width "90%"
                 x "5%"
                 y 1
             }
-            pane cwd="/home/lightningralf/programming/orgmem2" {
+            pane cwd="{{ .chezmoi.homeDir }}/programming/orgmem2" {
                 height "90%"
                 width "90%"
                 x "5%"
                 y 2
             }
-            pane cwd="/home/lightningralf/programming/orgmem2" {
+            pane cwd="{{ .chezmoi.homeDir }}/programming/orgmem2" {
                 height "90%"
                 width "90%"
                 x "5%"
                 y 3
             }
-            pane cwd="/home/lightningralf/programming/orgmem2" {
+            pane cwd="{{ .chezmoi.homeDir }}/programming/orgmem2" {
                 height "90%"
                 width "90%"
                 x "5%"
                 y 4
             }
-            pane cwd="/home/lightningralf/programming/orgmem2" {
+            pane cwd="{{ .chezmoi.homeDir }}/programming/orgmem2" {
                 height "90%"
                 width "90%"
                 x "5%"
                 y 5
             }
-            pane cwd="/home/lightningralf/programming/orgmem2" {
+            pane cwd="{{ .chezmoi.homeDir }}/programming/orgmem2" {
                 height "90%"
                 width "90%"
                 x "5%"
                 y 6
             }
-            pane cwd="/home/lightningralf/programming/orgmem2" {
+            pane cwd="{{ .chezmoi.homeDir }}/programming/orgmem2" {
                 height "90%"
                 width "90%"
                 x "5%"
                 y 7
             }
-            pane cwd="/home/lightningralf/programming/orgmem2" {
+            pane cwd="{{ .chezmoi.homeDir }}/programming/orgmem2" {
                 height "90%"
                 width "90%"
                 x "5%"
                 y 8
             }
-            pane cwd="/home/lightningralf/programming/orgmem2" {
+            pane cwd="{{ .chezmoi.homeDir }}/programming/orgmem2" {
                 height "90%"
                 width "90%"
                 x "5%"
                 y 9
             }
-            pane cwd="/home/lightningralf/programming/orgmem2" {
+            pane cwd="{{ .chezmoi.homeDir }}/programming/orgmem2" {
                 height "90%"
                 width "90%"
                 x 10
@@ -398,60 +398,60 @@ layout {
     }
     swap_floating_layout name="spread" {
         floating_panes max_panes=1 {
-            pane cwd="/home/lightningralf/programming/orgmem2" {
+            pane cwd="{{ .chezmoi.homeDir }}/programming/orgmem2" {
                 x "50%"
                 y "50%"
             }
         }
         floating_panes max_panes=2 {
-            pane cwd="/home/lightningralf/programming/orgmem2" {
+            pane cwd="{{ .chezmoi.homeDir }}/programming/orgmem2" {
                 width "45%"
                 x "1%"
                 y "25%"
             }
-            pane cwd="/home/lightningralf/programming/orgmem2" {
+            pane cwd="{{ .chezmoi.homeDir }}/programming/orgmem2" {
                 width "45%"
                 x "50%"
                 y "25%"
             }
         }
         floating_panes max_panes=3 {
-            pane cwd="/home/lightningralf/programming/orgmem2" {
+            pane cwd="{{ .chezmoi.homeDir }}/programming/orgmem2" {
                 height "45%"
                 width "45%"
                 y "55%"
             }
-            pane cwd="/home/lightningralf/programming/orgmem2" {
+            pane cwd="{{ .chezmoi.homeDir }}/programming/orgmem2" {
                 width "45%"
                 x "1%"
                 y "1%"
             }
-            pane cwd="/home/lightningralf/programming/orgmem2" {
+            pane cwd="{{ .chezmoi.homeDir }}/programming/orgmem2" {
                 width "45%"
                 x "50%"
                 y "1%"
             }
         }
         floating_panes max_panes=4 {
-            pane cwd="/home/lightningralf/programming/orgmem2" {
+            pane cwd="{{ .chezmoi.homeDir }}/programming/orgmem2" {
                 height "45%"
                 width "45%"
                 x "1%"
                 y "55%"
             }
-            pane cwd="/home/lightningralf/programming/orgmem2" {
+            pane cwd="{{ .chezmoi.homeDir }}/programming/orgmem2" {
                 height "45%"
                 width "45%"
                 x "50%"
                 y "55%"
             }
-            pane cwd="/home/lightningralf/programming/orgmem2" {
+            pane cwd="{{ .chezmoi.homeDir }}/programming/orgmem2" {
                 height "45%"
                 width "45%"
                 x "1%"
                 y "1%"
             }
-            pane cwd="/home/lightningralf/programming/orgmem2" {
+            pane cwd="{{ .chezmoi.homeDir }}/programming/orgmem2" {
                 height "45%"
                 width "45%"
                 x "50%"

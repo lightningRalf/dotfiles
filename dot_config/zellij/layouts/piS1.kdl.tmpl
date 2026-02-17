@@ -1,9 +1,9 @@
 // Project session: piS1
-// Repo: /home/lightningralf/pi-societyChatGPT1
+// Repo: {{ .chezmoi.homeDir }}/pi-societyChatGPT1
 // Tab: pi-societyChatGPT1
 // Layout: tab-bar + status-bar, top pi, bottom convex|web
 layout {
-  cwd "/home/lightningralf/pi-societyChatGPT1"
+  cwd "{{ .chezmoi.homeDir }}/pi-societyChatGPT1"
 
   tab name="pi-societyChatGPT1" focus=true hide_floating_panes=true {
     pane size=1 borderless=true {
@@ -14,16 +14,16 @@ layout {
     pane split_direction="horizontal" {
       // Main interactive pane (repo root)
       pane name="main" size="70%" command="bash" {
-        args "-lc" "cd /home/lightningralf/pi-societyChatGPT1 && exec bash -l"
+        args "-lc" "cd {{ .chezmoi.homeDir }}/pi-societyChatGPT1 && exec bash -l"
       }
 
       // Bottom row: convex + web dev (both started automatically)
       pane split_direction="vertical" {
         pane name="convex dev" command="bash" {
-          args "-lc" "cd /home/lightningralf/pi-societyChatGPT1 && exec npx convex dev"
+          args "-lc" "cd {{ .chezmoi.homeDir }}/pi-societyChatGPT1 && exec npx convex dev"
         }
         pane name="web dev" command="bash" {
-          args "-lc" "cd /home/lightningralf/pi-societyChatGPT1/apps/web && exec npm run dev"
+          args "-lc" "cd {{ .chezmoi.homeDir }}/pi-societyChatGPT1/apps/web && exec npm run dev"
         }
       }
     }
@@ -37,7 +37,7 @@ layout {
     pane size=1 borderless=true {
       plugin location="zellij:tab-bar"
     }
-    pane cwd="/home/lightningralf/pi-societyChatGPT1"
+    pane cwd="{{ .chezmoi.homeDir }}/pi-societyChatGPT1"
     pane size=1 borderless=true {
       plugin location="zellij:status-bar"
     }
