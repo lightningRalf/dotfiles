@@ -1,0 +1,8 @@
+layout {
+    tab name="ai-society" {
+        pane split_direction="vertical" {
+            pane name="org-handbook" command="bash" args="-lc" "cd /home/lightningralf/ai-society/holdingco/org-handbook && exec bash -l"
+            pane name="gitlab-auth-shell" command="bash" args="-lc" "GITLAB_AGENT=${GITLAB_AGENT:-agent-mjpa} gl-nas-shell"
+        }
+    }
+}

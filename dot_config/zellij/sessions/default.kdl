@@ -1,0 +1,9 @@
+session {
+    name "default"
+    status_bar true
+    tab_bar true
+    theme "github_light_inspired_zellij"
+    pane_frames true
+    auto_layout true
+    default_layout "default"
+}
